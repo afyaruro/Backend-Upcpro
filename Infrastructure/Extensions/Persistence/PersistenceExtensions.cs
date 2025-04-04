@@ -1,6 +1,7 @@
 
 using Application.Service.Competence;
 using Application.Service.Faculty;
+using Application.Service.InfoQuestion;
 using Application.Service.Program;
 using Application.Service.User;
 using Domain.Entity.Program;
@@ -42,7 +43,7 @@ namespace Infrastructure.Extensions.Persistence
             services.AddScoped<UserService>();
 
             services.AddSingleton<IQuestionRepository<QuestionEntity>, QuestionRepository>();
-            services.AddScoped<QuestionService>();
+            // services.AddScoped<QuestionService>();
 
             services.AddSingleton<IQuestionRepository<InfoQuestionEntity>, InfoQuestionRepository>();
             services.AddScoped<InfoQuestionService>();

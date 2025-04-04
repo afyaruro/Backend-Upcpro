@@ -10,3 +10,4 @@
 /home/afyaruro/UpcPro Backend/Domain/obj/Debug/net8.0/Domain.pdb
 /home/afyaruro/UpcPro Backend/Domain/obj/Debug/net8.0/ref/Domain.dll
 /home/afyaruro/UpcPro Backend/Domain/obj/Debug/net8.0/Domain.csproj.AssemblyReference.cache
+/home/afyaruro/UpcPro Backend/Domain/obj/Debug/net8.0/Domain.sourcelink.json

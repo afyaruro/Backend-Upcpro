@@ -13,3 +13,4 @@
 /home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/refint/Application.dll
 /home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.pdb
 /home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/ref/Application.dll
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.sourcelink.json
