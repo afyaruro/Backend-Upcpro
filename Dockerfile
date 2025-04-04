@@ -3,14 +3,14 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 8081
 
-# Etapa de build: imagen del SDK de .NET para compilar la aplicación
+# Etapa de build: imagen del SDK de .NET
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet tool install --global dotnet-ef --version 8.0.0
 
 # Copiar archivos de la solución y proyectos
-COPY ["upcpro.sln", "./"] 
+COPY ["upcpro.sln", "./"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["Application/Application.csproj", "Application/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
@@ -22,20 +22,9 @@ RUN dotnet restore
 # Copiar el resto de los archivos del proyecto
 COPY . .
 
-# Compilar la aplicación
-WORKDIR "/src/WebAPI"
-RUN dotnet run
+# Usar la imagen de build como final
+FROM build AS final
+WORKDIR /src/WebAPI
 
-#RUN dotnet build -c Release -o /app/build
-
-# Publicar la aplicación
-# FROM build AS publish 
-#RUN dotnet publish -c Release -o /app/publish
-
-# Imagen final para ejecutar la aplicación
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-
-# Comando de inicio
-CMD ["dotnet", "WebAPI.dll"]
+# Comando de inicio - ahora ejecuta dotnet run cuando se inicia el contenedor
+CMD ["dotnet", "run"]
