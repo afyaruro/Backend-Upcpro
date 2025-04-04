@@ -1,0 +1,30 @@
+
+
+
+Infrastructure
+
+//swagger
+dotnet add package Swashbuckle.AspNetCore --version 8.0.0
+dotnet add package Microsoft.IdentityModel.Tokens --version 8.7.0
+
+//para inyeccion este si o si es obligatorio
+dotnet add package Microsoft.Extensions.DependencyInjection --version 9.0.3
+dotnet add package Microsoft.Extensions.Configuration --version 9.0.3
+
+JWT
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.14
+
+
+
+
+Aplication
+
+dotnet add package System.IdentityModel.Tokens.Jwt --version 8.7.0
+dotnet add package Microsoft.IdentityModel.Tokens --version 8.7.0
+dotnet add package Microsoft.AspNetCore.Identity --version 2.3.1
+dotnet add package Microsoft.AspNetCore.Http --version 2.3.0
+
+
+Domain
+
+dotnet add package MongoDB.Driver --version 3.3.0

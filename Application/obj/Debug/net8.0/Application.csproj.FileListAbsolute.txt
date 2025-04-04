@@ -1,0 +1,15 @@
+/home/afyaruro/UpcPro Backend/Application/bin/Debug/net8.0/Application.deps.json
+/home/afyaruro/UpcPro Backend/Application/bin/Debug/net8.0/Application.dll
+/home/afyaruro/UpcPro Backend/Application/bin/Debug/net8.0/Application.pdb
+/home/afyaruro/UpcPro Backend/Application/bin/Debug/net8.0/Domain.dll
+/home/afyaruro/UpcPro Backend/Application/bin/Debug/net8.0/Domain.pdb
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.csproj.AssemblyReference.cache
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.AssemblyInfoInputs.cache
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.AssemblyInfo.cs
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.csproj.CoreCompileInputs.cache
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.csproj.CopyComplete
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.dll
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/refint/Application.dll
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/Application.pdb
+/home/afyaruro/UpcPro Backend/Application/obj/Debug/net8.0/ref/Application.dll

@@ -1,0 +1,17 @@
+/home/afyaruro/UpcPro Backend/Infrastructure/bin/Debug/net8.0/Infrastructure.deps.json
+/home/afyaruro/UpcPro Backend/Infrastructure/bin/Debug/net8.0/Infrastructure.dll
+/home/afyaruro/UpcPro Backend/Infrastructure/bin/Debug/net8.0/Infrastructure.pdb
+/home/afyaruro/UpcPro Backend/Infrastructure/bin/Debug/net8.0/Application.dll
+/home/afyaruro/UpcPro Backend/Infrastructure/bin/Debug/net8.0/Domain.dll
+/home/afyaruro/UpcPro Backend/Infrastructure/bin/Debug/net8.0/Domain.pdb
+/home/afyaruro/UpcPro Backend/Infrastructure/bin/Debug/net8.0/Application.pdb
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.csproj.AssemblyReference.cache
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.AssemblyInfoInputs.cache
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.AssemblyInfo.cs
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.csproj.CoreCompileInputs.cache
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.csproj.CopyComplete
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.dll
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/refint/Infrastructure.dll
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.pdb
+/home/afyaruro/UpcPro Backend/Infrastructure/obj/Debug/net8.0/ref/Infrastructure.dll
