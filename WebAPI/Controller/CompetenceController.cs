@@ -1,21 +1,21 @@
-using System.Net;
-using Application.Base.Validate;
+
 using Application.Common.Exceptions;
 using Application.Service.Competence;
 using Application.Service.Competence.Commands.CompetenceCreate;
 using Application.Service.Competence.Commands.CompetenceDelete;
-using Application.Service.Competence.Commands.CompetenceGetAllPage;
 using Application.Service.Competence.Commands.CompetenceUpdate;
+using Application.Service.Faculty.Commands.FacultyGetAllPage;
 using Application.Service.User;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Controller.Base;
 
 namespace WebAPI.Controller
 {
     [ApiController]
     [Route("api/competence")]
-    public class CompetenceController : ControllerBase
+    public class CompetenceController : ApiControllerBase
     {
         private readonly CompetenceService _competenceService;
         private readonly UserService _userService;
@@ -29,49 +29,27 @@ namespace WebAPI.Controller
 
         [Authorize]
         [HttpPost("created")]
-        public async Task<IActionResult> Create([FromBody] CreateInputCompetenceCommand dto)
+        public async Task<IActionResult> Create([FromBody] CompetenceCreateInputCommand dto)
         {
 
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
                 var response = await _competenceService.Create(dto);
 
                 if (response == null)
-                    return BadRequest();
+                {
+                    return BadRequest(new { success = false, message = "Error al crear la competencia" });
+                }
 
                 return CreatedAtAction(nameof(Create), new { success = true, data = response, message = "competencia creada", });
             }
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (EntityExistException ex)
             {
@@ -79,33 +57,17 @@ namespace WebAPI.Controller
             }
             catch (Exception)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                                  new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [Authorize]
         [HttpPost("get-all")]
-        public async Task<IActionResult> GetAll([FromBody] GetAllPageCompetenceInputCommand dto)
+        public async Task<IActionResult> GetAll([FromBody] CompetenceGetAllPageInputCommand dto)
         {
             try
             {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
                 var response = await _competenceService.GetAllPage(dto);
 
                 if (response.isError)
@@ -115,50 +77,28 @@ namespace WebAPI.Controller
                     return NotFound(new { success = false, message = "No se encontraron resultados" });
 
                 return Ok(new { success = true, message = response.message, totalRegistros = response.totalRecords, totalPages = response.totalPages, data = response.listEntity });
+
             }
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] UpdateCompetenceCommand dto)
+        public async Task<IActionResult> Update([FromBody] CompetenceUpdateInputCommand dto)
         {
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
 
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
                 var response = await _competenceService.Update(dto);
 
                 if (!response)
@@ -180,48 +120,24 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [Authorize]
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteCompetenceCommand dto)
+        public async Task<IActionResult> Delete([FromBody] CompetenceDeleteInputCommand dto)
         {
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
                 var result = await _competenceService.Delete(dto);
                 if (!result)
                 {
@@ -235,23 +151,11 @@ namespace WebAPI.Controller
             }
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (Exception)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                                  new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 

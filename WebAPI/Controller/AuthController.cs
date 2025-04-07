@@ -1,21 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application.Base.CommandBase.User;
-using Application.Base.Validate;
+
 using Application.Common.Exceptions;
 using Application.Jwt;
 using Application.Service.User;
+using Application.Service.User.Commands.UserCreate;
 using Application.Service.User.Commands.UserLogin;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Controller.Base;
 
 namespace WebAPI.Controller
 {
     [ApiController]
     [Route("api/auth")]
-    public class AuthController : ControllerBase
+    public class AuthController : ApiControllerBase
     {
         private readonly UserService _userService;
         private readonly JwtService _jwtService;
@@ -53,58 +50,32 @@ namespace WebAPI.Controller
             }
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefrehsToken([FromBody] UserIdCommand command)
+        public async Task<IActionResult> RefrehsToken([FromBody] UserAuthInputCommand command)
         {
             try
             {
-                if (!IsValidObjectId.IsValid(command.UserId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es valido." });
-                }
 
+                await CheckAccess(userId: command.UserId!, userService: _userService, typeUser: "student");
 
-                if (await _userService.ExistById(command.UserId))
-                {
-                    Console.WriteLine("Existe");
-                    Console.WriteLine(await _userService.IsUserType("student", command.UserId));
-                    if (await _userService.IsUserType("student", command.UserId))
-                    {
-                        Console.WriteLine("No es Admin");
-                        var response = _jwtService.generateToken(command.UserId);
-                        return Ok(new { success = true, token = response });
-                    }
-                    Console.WriteLine(" es Admin");
-                }
-
-                return Unauthorized(new { success = false, message = "No tienes permisos." });
+                var token = _jwtService.generateToken(command.UserId);
+                return Ok(new { success = true, token = token });
 
 
             }
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
     }

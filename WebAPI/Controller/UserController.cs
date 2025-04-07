@@ -8,12 +8,13 @@ using Application.Service.User.Commands.UserUpdate;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Controller.Base;
 
 namespace WebAPI.Controller
 {
     [ApiController]
     [Route("api/user")]
-    public class UserController : ControllerBase
+    public class UserController : ApiControllerBase
     {
         private readonly UserService _userService;
         private readonly JwtService _jwtService;
@@ -27,7 +28,7 @@ namespace WebAPI.Controller
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] CreateInputUserCommand dto)
+        public async Task<IActionResult> Create([FromBody] UserCreateInputCommand dto)
         {
 
             try
@@ -42,18 +43,7 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (EntityExistException ex)
             {
@@ -65,31 +55,20 @@ namespace WebAPI.Controller
             }
             catch (Exception)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                                  new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] UpdateUserCommand dto)
+        public async Task<IActionResult> Update([FromBody] UserUpdateInputCommand dto)
         {
 
             try
             {
 
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest("El usuario no es valido");
-                }
-
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound("No Existe el usuario");
-                }
+                await CheckAccessAll(userId!, _userService);
 
                 var response = await _userService.Update(dto, userId!);
                 if (!response)
@@ -112,46 +91,26 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [Authorize]
         [HttpPut("update-mail")]
-        public async Task<IActionResult> UpdateMail([FromBody] UpdateUserMailCommand dto)
+        public async Task<IActionResult> UpdateMail([FromBody] UserMailUpdateInputCommand dto)
         {
 
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccessAll(userId!, _userService);
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest("El usuario no es valido");
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound("No Existe el usuario");
-                }
-
-                var response = await _userService.UpdateMail(dto, userId);
+                var response = await _userService.UpdateMail(dto, userId!);
                 if (!response)
                 {
                     return BadRequest(new { success = false, message = "No se actualizo el correo del usuario" });
@@ -172,44 +131,24 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [Authorize]
         [HttpPut("update-password")]
-        public async Task<IActionResult> UpdatePassword([FromBody] UpdateUserPasswordCommand dto)
+        public async Task<IActionResult> UpdatePassword([FromBody] UserPasswordUpdateInputCommand dto)
         {
 
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest("El usuario no es valido");
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound("No Existe el usuario");
-                }
+                await CheckAccessAll(userId!, _userService);
 
                 var response = await _userService.UpdatePassword(dto, userId!);
                 if (!response)
@@ -232,23 +171,12 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 

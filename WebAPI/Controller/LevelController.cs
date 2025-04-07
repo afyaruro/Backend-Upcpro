@@ -1,12 +1,10 @@
 
-using System.Net;
-using Application.Base.Validate;
 using Application.Common.Exceptions;
-using Application.Service.InfoQuestion;
-using Application.Service.InfoQuestion.Commands.InfoQuestionCreate;
-using Application.Service.InfoQuestion.Commands.InfoQuestionDelete;
-using Application.Service.InfoQuestion.Commands.InfoQuestionGetAllPage;
-using Application.Service.InfoQuestion.Commands.InfoQuestionUpdate;
+using Application.Service.Level;
+using Application.Service.Level.Commands.LevelCreate;
+using Application.Service.Level.Commands.LevelDelete;
+using Application.Service.Level.Commands.LevelUpdate;
+using Application.Service.Faculty.Commands.FacultyGetAllPage;
 using Application.Service.User;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -16,23 +14,22 @@ using WebAPI.Controller.Base;
 namespace WebAPI.Controller
 {
     [ApiController]
-    [Route("api/info-question")]
-    public class InfoQuestionController : ApiControllerBase
+    [Route("api/level")]
+    public class LevelController : ApiControllerBase
     {
-
-        private readonly InfoQuestionService _InfoQuestionService;
+        private readonly LevelService _LevelService;
         private readonly UserService _userService;
 
 
-        public InfoQuestionController(InfoQuestionService service, UserService userService)
+        public LevelController(LevelService service, UserService userService)
         {
-            _InfoQuestionService = service;
+            _LevelService = service;
             _userService = userService;
         }
 
         [Authorize]
         [HttpPost("created")]
-        public async Task<IActionResult> Create([FromBody] InfoQuestionCreateInputCommand dto)
+        public async Task<IActionResult> Create([FromBody] LevelCreateInputCommand dto)
         {
 
             try
@@ -40,12 +37,14 @@ namespace WebAPI.Controller
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
                 await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                var response = await _InfoQuestionService.Create(dto);
+                var response = await _LevelService.Create(dto);
 
                 if (response == null)
-                    return BadRequest();
+                {
+                    return BadRequest(new { success = false, message = "Error al crear el nivel" });
+                }
 
-                return CreatedAtAction(nameof(Create), new { success = true, data = response, message = "Informacio de preguntas creada", });
+                return CreatedAtAction(nameof(Create), new { success = true, data = response, message = "nivel creado", });
             }
 
             catch (ValidationException ex)
@@ -56,10 +55,6 @@ namespace WebAPI.Controller
             {
                 return Conflict(new { success = false, message = ex.Message });
             }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new { success = false, message = ex.Message });
-            }
             catch (Exception)
             {
                 return InternalServerError();
@@ -68,12 +63,12 @@ namespace WebAPI.Controller
 
         [Authorize]
         [HttpPost("get-all")]
-        public async Task<IActionResult> GetAll([FromBody] InfoQuestionGetAllPageInputCommand dto)
+        public async Task<IActionResult> GetAll([FromBody] LevelGetAllPageInputCommand dto)
         {
             try
             {
 
-                var response = await _InfoQuestionService.GetAllPage(dto);
+                var response = await _LevelService.GetAllPage(dto);
 
                 if (response.isError)
                     return BadRequest(new { success = false, message = response.message });
@@ -82,6 +77,7 @@ namespace WebAPI.Controller
                     return NotFound(new { success = false, message = "No se encontraron resultados" });
 
                 return Ok(new { success = true, message = response.message, totalRegistros = response.totalRecords, totalPages = response.totalPages, data = response.listEntity });
+
             }
             catch (ValidationException ex)
             {
@@ -95,21 +91,22 @@ namespace WebAPI.Controller
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] InfoQuestionUpdateInputCommand dto)
+        public async Task<IActionResult> Update([FromBody] LevelUpdateInputCommand dto)
         {
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
                 await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                var response = await _InfoQuestionService.Update(dto);
+
+                var response = await _LevelService.Update(dto);
 
                 if (!response)
                 {
-                    return BadRequest(new { success = false, message = "No se actualizo la informacion de preguntas" });
+                    return BadRequest(new { success = false, message = "No se actualizo el nivel" });
                 }
 
-                return Ok(new { success = true, message = "La informacion de preguntas se ha actualizado exitosamente" });
+                return Ok(new { success = true, message = "El nivel se ha actualizado exitosamente" });
             }
             catch (EntityExistException ex)
             {
@@ -134,19 +131,19 @@ namespace WebAPI.Controller
 
         [Authorize]
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] InfoQuestionDeleteInputCommand dto)
+        public async Task<IActionResult> Delete([FromBody] LevelDeleteInputCommand dto)
         {
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
                 await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                var result = await _InfoQuestionService.Delete(dto);
+                var result = await _LevelService.Delete(dto);
                 if (!result)
                 {
-                    return BadRequest(new { success = false, message = "No se elimino la informacion de preguntas" });
+                    return BadRequest(new { success = false, message = "No se elimino el nivel" });
                 }
-                return Ok(new { success = result, message = "La informacion de preguntas se ha eliminado correctamente." });
+                return Ok(new { success = result, message = "El nivel se ha eliminado correctamente." });
             }
             catch (EntityNotFoundException ex)
             {
@@ -161,5 +158,6 @@ namespace WebAPI.Controller
                 return InternalServerError();
             }
         }
+
     }
 }

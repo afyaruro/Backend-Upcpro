@@ -1,6 +1,5 @@
 
 using System.Net;
-using Application.Base.Validate;
 using Application.Common.Exceptions;
 using Application.Service.Program;
 using Application.Service.Program.Commands.ProgramCreate;
@@ -11,12 +10,13 @@ using Application.Service.User;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Controller.Base;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/program")]
-    public class ProgramController : ControllerBase
+    public class ProgramController : ApiControllerBase
     {
 
         private readonly ProgramService _ProgramService;
@@ -31,27 +31,14 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [HttpPost("created")]
-        public async Task<IActionResult> Create([FromBody] CreateInputProgramCommand dto)
+        public async Task<IActionResult> Create([FromBody] ProgramCreateInputCommand dto)
         {
 
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
 
                 var response = await _ProgramService.Create(dto);
 
@@ -63,18 +50,7 @@ namespace WebAPI.Controllers
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (EntityExistException ex)
             {
@@ -86,33 +62,17 @@ namespace WebAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                                  new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
+
             }
         }
 
         [Authorize]
         [HttpPost("get-all")]
-        public async Task<IActionResult> GetAll([FromBody] GetAllPageProgramInputCommand dto)
+        public async Task<IActionResult> GetAll([FromBody] ProgramGetAllPageInputCommand dto)
         {
             try
             {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
                 var response = await _ProgramService.GetAllPage(dto);
 
                 if (response.isError)
@@ -125,18 +85,7 @@ namespace WebAPI.Controllers
             }
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (Exception)
             {
@@ -146,26 +95,13 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] UpdateProgramCommand dto)
+        public async Task<IActionResult> Update([FromBody] ProgramUpdateInputCommand dto)
         {
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
                 var response = await _ProgramService.Update(dto);
 
                 if (!response)
@@ -187,48 +123,24 @@ namespace WebAPI.Controllers
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [Authorize]
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteProgramCommand dto)
+        public async Task<IActionResult> Delete([FromBody] ProgramDeleteInputCommand dto)
         {
             try
             {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
+                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
                 var result = await _ProgramService.Delete(dto);
                 if (!result)
                 {
@@ -242,18 +154,7 @@ namespace WebAPI.Controllers
             }
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+               return HandleValidationException(ex);
             }
             catch (Exception)
             {

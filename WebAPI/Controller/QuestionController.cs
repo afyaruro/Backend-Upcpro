@@ -2,11 +2,11 @@
 using System.Net;
 using Application.Base.Validate;
 using Application.Common.Exceptions;
-using Application.Service.InfoQuestion;
-using Application.Service.InfoQuestion.Commands.InfoQuestionCreate;
-using Application.Service.InfoQuestion.Commands.InfoQuestionDelete;
-using Application.Service.InfoQuestion.Commands.InfoQuestionGetAllPage;
-using Application.Service.InfoQuestion.Commands.InfoQuestionUpdate;
+using Application.Service.Question;
+using Application.Service.Question.Commands.QuestionCreate;
+using Application.Service.Question.Commands.QuestionDelete;
+using Application.Service.Question.Commands.QuestionGetAllPage;
+using Application.Service.Question.Commands.QuestionUpdate;
 using Application.Service.User;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -16,23 +16,23 @@ using WebAPI.Controller.Base;
 namespace WebAPI.Controller
 {
     [ApiController]
-    [Route("api/info-question")]
-    public class InfoQuestionController : ApiControllerBase
+    [Route("api/question")]
+    public class QuestionController : ApiControllerBase
     {
 
-        private readonly InfoQuestionService _InfoQuestionService;
+        private readonly QuestionService _QuestionService;
         private readonly UserService _userService;
 
 
-        public InfoQuestionController(InfoQuestionService service, UserService userService)
+        public QuestionController(QuestionService service, UserService userService)
         {
-            _InfoQuestionService = service;
+            _QuestionService = service;
             _userService = userService;
         }
 
         [Authorize]
         [HttpPost("created")]
-        public async Task<IActionResult> Create([FromBody] InfoQuestionCreateInputCommand dto)
+        public async Task<IActionResult> Create([FromBody] QuestionCreateInputCommand dto)
         {
 
             try
@@ -40,12 +40,13 @@ namespace WebAPI.Controller
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
                 await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                var response = await _InfoQuestionService.Create(dto);
+
+                var response = await _QuestionService.Create(dto);
 
                 if (response == null)
                     return BadRequest();
 
-                return CreatedAtAction(nameof(Create), new { success = true, data = response, message = "Informacio de preguntas creada", });
+                return CreatedAtAction(nameof(Create), new { success = true, data = response, message = "pregunta creada", });
             }
 
             catch (ValidationException ex)
@@ -68,12 +69,12 @@ namespace WebAPI.Controller
 
         [Authorize]
         [HttpPost("get-all")]
-        public async Task<IActionResult> GetAll([FromBody] InfoQuestionGetAllPageInputCommand dto)
+        public async Task<IActionResult> GetAll([FromBody] QuestionGetAllPageInputCommand dto)
         {
             try
             {
 
-                var response = await _InfoQuestionService.GetAllPage(dto);
+                var response = await _QuestionService.GetAllPage(dto);
 
                 if (response.isError)
                     return BadRequest(new { success = false, message = response.message });
@@ -85,31 +86,42 @@ namespace WebAPI.Controller
             }
             catch (ValidationException ex)
             {
-                return HandleValidationException(ex);
+                var errors = ex.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToArray()
+                );
+
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = errors
+                });
             }
             catch (Exception)
             {
-                return InternalServerError();
+                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
             }
         }
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] InfoQuestionUpdateInputCommand dto)
+        public async Task<IActionResult> Update([FromBody] QuestionUpdateInputCommand dto)
         {
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
                 await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                var response = await _InfoQuestionService.Update(dto);
+                var response = await _QuestionService.Update(dto);
 
                 if (!response)
                 {
-                    return BadRequest(new { success = false, message = "No se actualizo la informacion de preguntas" });
+                    return BadRequest(new { success = false, message = "No se actualizo la pregunta" });
                 }
 
-                return Ok(new { success = true, message = "La informacion de preguntas se ha actualizado exitosamente" });
+                return Ok(new { success = true, message = "La pregunta se ha actualizado exitosamente" });
             }
             catch (EntityExistException ex)
             {
@@ -134,19 +146,19 @@ namespace WebAPI.Controller
 
         [Authorize]
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] InfoQuestionDeleteInputCommand dto)
+        public async Task<IActionResult> Delete([FromBody] QuestionDeleteInputCommand dto)
         {
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
                 await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                var result = await _InfoQuestionService.Delete(dto);
+                var result = await _QuestionService.Delete(dto);
                 if (!result)
                 {
-                    return BadRequest(new { success = false, message = "No se elimino la informacion de preguntas" });
+                    return BadRequest(new { success = false, message = "No se elimino la pregunta" });
                 }
-                return Ok(new { success = result, message = "La informacion de preguntas se ha eliminado correctamente." });
+                return Ok(new { success = result, message = "La pregunta se ha eliminado correctamente." });
             }
             catch (EntityNotFoundException ex)
             {

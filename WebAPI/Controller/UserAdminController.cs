@@ -10,12 +10,13 @@ using Application.Service.User.Commands.UserUpdate;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Controller.Base;
 
 namespace WebAPI.Controller
 {
     [ApiController]
     [Route("api/user-admin")]
-    public class UserAdminController : ControllerBase
+    public class UserAdminController : ApiControllerBase
     {
         private readonly UserService _userService;
 
@@ -29,29 +30,16 @@ namespace WebAPI.Controller
 
         [Authorize]
         [HttpPost("created-admin")]
-        public async Task<IActionResult> CreateAdmin([FromBody] CreateInputUserCommand dto)
+        public async Task<IActionResult> CreateAdmin([FromBody] UserCreateInputCommand dto)
         {
 
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
 
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
-
-                var response = await _userService.CreateAdmin(dto);
+                var response = await _userService.CreateForAdmin(dto, "admin");
                 if (response == null)
                     return BadRequest("Error al crear");
 
@@ -60,18 +48,7 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (EntityExistException ex)
             {
@@ -83,58 +60,31 @@ namespace WebAPI.Controller
             }
             catch (Exception)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                                  new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
         [Authorize]
         [HttpPost("created-creator")]
-        public async Task<IActionResult> CreateCreator([FromBody] CreateInputUserCommand dto)
+        public async Task<IActionResult> CreateCreator([FromBody] UserCreateInputCommand dto)
         {
 
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
-
-
-                var response = await _userService.CreateAdmin(dto);
+                var response = await _userService.CreateForAdmin(dto, "creator");
 
                 if (response == null)
                     return BadRequest("Error al crear");
 
-                return CreatedAtAction(nameof(CreateCreator), new { success = true, data = response, message = "Programa creado", });
+                return CreatedAtAction(nameof(CreateCreator), new { success = true, data = response, message = "Usuario administrador creado", });
             }
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (EntityExistException ex)
             {
@@ -146,34 +96,18 @@ namespace WebAPI.Controller
             }
             catch (Exception)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                                  new { success = false, message = "Ocurrió un error inesperado." });
-            }
+               return InternalServerError();
+                 }
         }
 
         [Authorize]
         [HttpPost("get-all")]
-        public async Task<IActionResult> GetAll([FromBody] GetAllPageUserInputCommand dto)
+        public async Task<IActionResult> GetAll([FromBody] UserGetAllPageInputCommand dto)
         {
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
-
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
                 var response = await _userService.GetAllPage(dto);
 
@@ -184,48 +118,23 @@ namespace WebAPI.Controller
             }
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
-            }
+                return InternalServerError();
+              }
         }
 
         [Authorize]
         [HttpPut("update-for-admin")]
-        public async Task<IActionResult> Update([FromBody] UpdateUserForAdminCommand dto)
+        public async Task<IActionResult> Update([FromBody] UserForAdminUpdateInputCommand dto)
         {
 
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
                 var response = await _userService.UpdateForAdmin(dto);
                 if (!response)
@@ -248,50 +157,24 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
-            }
+                return InternalServerError();
+             }
         }
 
         [Authorize]
         [HttpPut("update-mail-for-admin")]
-        public async Task<IActionResult> UpdateMail([FromBody] UpdateUserMailForAdminCommand dto)
+        public async Task<IActionResult> UpdateMail([FromBody] UserMailUpdateForAdminInputCommand dto)
         {
 
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
-
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
                 var response = await _userService.UpdateMailForAdmin(dto);
 
@@ -315,50 +198,24 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
-            }
+                return InternalServerError();
+             }
         }
 
         [Authorize]
         [HttpPut("update-password-for-admin")]
-        public async Task<IActionResult> UpdatePassword([FromBody] UpdateUserPasswordForAdminCommand dto)
+        public async Task<IActionResult> UpdatePassword([FromBody] UserPasswordForAdminUpdateInputCommand dto)
         {
 
             try
             {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest(new { success = false, message = "El usuario no es válido" });
-                }
-
-                if (!await _userService.ExistById(userId!))
-                {
-                    return NotFound(new { success = false, message = "No existe el usuario" });
-                }
-
-                if (!await _userService.IsUserType("admin", userId!))
-                {
-                    return Unauthorized(new { success = false, message = "No está autorizado para esta acción" });
-                }
-
+               var userId = HttpContext.User.FindFirst("uid")?.Value;
+                await CheckAccess(userId: userId!, userService: _userService, "admin");
 
                 var response = await _userService.UpdatePasswordForAdmin(dto);
                 if (!response)
@@ -381,23 +238,12 @@ namespace WebAPI.Controller
 
             catch (ValidationException ex)
             {
-                var errors = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
+                return HandleValidationException(ex);
             }
 
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Ocurrió un error inesperado." });
+                return InternalServerError();
             }
         }
 
