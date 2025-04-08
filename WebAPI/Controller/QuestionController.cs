@@ -73,7 +73,6 @@ namespace WebAPI.Controller
         {
             try
             {
-
                 var response = await _QuestionService.GetAllPage(dto);
 
                 if (response.isError)

@@ -1,0 +1,51 @@
+
+using Application.Common.Exceptions;
+using Application.Service.Faculty.Commands.FacultyCreate;
+using Domain.Entity.Facultad;
+using Domain.Entity.Program;
+using Domain.Port.Faculty;
+using Domain.Port.Program;
+using FluentValidation;
+
+namespace Application.Service.Program.Commands.ProgramCreate
+{
+    public class ProgramCreateCommandHandler
+    {
+        private readonly IProgramRepository _programRepository;
+        private readonly IFacultyRepository _facultadRepository;
+
+
+        public ProgramCreateCommandHandler(IProgramRepository programRepository, IFacultyRepository facultadRepository)
+        {
+            this._programRepository = programRepository;
+            this._facultadRepository = facultadRepository;
+        }
+
+        public async Task<ProgramCreateOutputCommand> HandleAsync(ProgramCreateInputCommand command)
+        {
+
+            var validator = new ProgramCreateCommandValidator();
+            var validationResult = await validator.ValidateAsync(command);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            if (await _programRepository.ExistByName(command.Name.ToUpper()))
+            {
+                throw new EntityExistException("El programa ya existe");
+            }
+
+            if (!await _facultadRepository.ExistById(command.IdFaculty))
+            {
+                throw new EntityNotFoundException("la facultad no existe");
+            }
+
+            var resp = await this._programRepository.Add(new ProgramEntity(name: command.Name.ToUpper(), idFaculty: command.IdFaculty));
+
+            return new ProgramCreateOutputCommand(name: resp.Name, id: resp.Id, faculty: new FacultyCreateOutputCommand(id: resp.Faculty.Id, name: resp.Faculty.Name));
+        }
+    }
+}
+

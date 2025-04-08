@@ -60,7 +60,6 @@ namespace WebAPI.Controller
             }
         }
 
-        [Authorize]
         [HttpPost("get-all")]
         public async Task<IActionResult> GetAll([FromBody] FacultyGetAllPageInputCommand dto)
         {

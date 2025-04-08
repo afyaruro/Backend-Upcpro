@@ -10,7 +10,7 @@ namespace Domain.Port.User
         Task<UserEntity?> GetById(string id);
         Task<bool> ExistByMail(string mail);
         Task<bool> ExistById(string id);
-        Task<bool> IsUserType(string id, string type);
+        Task<UserEntity?> IsUserType(string id, string type);
         Task<UserEntity> Add(UserEntity entity);
         Task<bool> Update(UserEntity entity);
         Task<bool> UpdatePassword(string userId, string password);

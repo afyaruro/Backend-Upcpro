@@ -39,9 +39,9 @@ namespace Infrastructure.Adapters.Competence
             return await _collection.Find(c => c.Id == id).AnyAsync();
         }
 
-        public async Task<bool> ExistByName(string name)
+        public async Task<CompetenceEntity> ExistByName(string name)
         {
-            return await _collection.Find(c => c.Name == name).AnyAsync();
+            return await _collection.Find(c => c.Name== name).FirstOrDefaultAsync();
         }
 
         public async Task<ResponseEntity<CompetenceEntity>> GetAll(int page, int pageSize)

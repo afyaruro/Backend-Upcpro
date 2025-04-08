@@ -19,6 +19,7 @@ namespace Infrastructure.Extensions.Start
             userAdmin.Mail = "admin@admin.com";
             userAdmin.TypeUser = "admin";
             var helper = new PasswordEncryptionHelper();
+            userAdmin.Mail = userAdmin.Mail.ToUpper();
             userAdmin.Password = helper.HashPassword("Admin2025*", userAdmin.Mail);
             if (!await _repository.ExistByMail(userAdmin.Mail))
             {

@@ -38,7 +38,8 @@ namespace WebAPI.Controller
                 if (response == null)
                     return BadRequest("Error al crear");
 
-                return CreatedAtAction(nameof(Create), new { success = true, data = response, message = "Usuario creado", });
+                var token = _jwtService.generateToken(response.Id);
+                return CreatedAtAction(nameof(Create), new { success = true, data = response, token = token, message = "Usuario creado", });
             }
 
             catch (ValidationException ex)

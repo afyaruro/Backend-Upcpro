@@ -10,10 +10,8 @@ namespace Domain.Entity.Question
         public string Enunciated { get; set; }
         [BsonElement("feedback")]
         public string Feedback { get; set; }
-        [BsonElement("difficulty")]
-        public string Difficulty { get; set; }
         [BsonElement("type")]
-        public string OptionType { get; set; }  //image or text
+        public string OptionType { get; set; }
         [BsonElement("a")]
         public string OptionA { get; set; }
         [BsonElement("b")]
@@ -26,9 +24,36 @@ namespace Domain.Entity.Question
         public int CorrectAnswer { get; set; }
         [BsonElement("idInfoQuestion")]
         public string IdInfoQuestion { get; set; }
-        [BsonIgnore]
-        public InfoQuestionEntity InfoQuestion { get; set; }
+        [BsonElement("typeQuestion")]
+        public string TypeQuestion { get; set; }
 
+        [BsonIgnore]
+        public InfoQuestionEntity? InfoQuestion { get; set; }
+
+        public QuestionEntity(
+            string enunciated,
+            string feedback,
+            string optionType,
+            string optionA,
+            string optionB,
+            string optionC,
+            string optionD,
+            int correctAnswer,
+            string idInfoQuestion,
+            string typeQuestion)
+        {
+            Enunciated = enunciated;
+            Feedback = feedback;
+            OptionType = optionType;
+            OptionA = optionA;
+            OptionB = optionB;
+            OptionC = optionC;
+            OptionD = optionD;
+            CorrectAnswer = correctAnswer;
+            IdInfoQuestion = idInfoQuestion;
+            TypeQuestion = typeQuestion;
+            DateUpdate = DateTime.Now;
+        }
 
 
     }

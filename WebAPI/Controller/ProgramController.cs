@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize]
+        
         [HttpPost("get-all")]
         public async Task<IActionResult> GetAll([FromBody] ProgramGetAllPageInputCommand dto)
         {

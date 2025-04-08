@@ -10,7 +10,7 @@ namespace Domain.Port.Competence
     public interface ICompetenceRepository
     {
         Task<bool> ExistById(string id);
-        Task<bool> ExistByName(string name);
+        Task<CompetenceEntity> ExistByName(string name);
         Task<CompetenceEntity> Add(CompetenceEntity entity);
         Task<bool> Update(CompetenceEntity entity);
         Task<bool> Delete(string id);

@@ -12,27 +12,27 @@ namespace Application.Service.Faculty
         private readonly IFacultyRepository _repository;
         public FacultyService(IFacultyRepository repository) => _repository = repository;
 
-        public async Task<CreateOutputFacultyCommand> Create(CreateInputFacultyCommand command)
+        public async Task<FacultyCreateOutputCommand> Create(FacultyCreateInputCommand command)
         {
-            var _create = new CreateFacultyCommandHandler(_repository);
+            var _create = new FacultyCreateCommandHandler(_repository);
             return await _create.HandleAsync(command);
         }
 
-        public async Task<ResponseEntity<GetAllPageFacultyOutputCommand>> GetAllPage(GetAllPageFacultyInputCommand command)
+        public async Task<ResponseEntity<FacultyGetAllPageOutputCommand>> GetAllPage(FacultyGetAllPageInputCommand command)
         {
-            var _getAll = new GetAllPageFacultyCommandHandler(_repository);
+            var _getAll = new FacultyGetAllPageCommandHandler(_repository);
             return await _getAll.HandleAsync(command);
         }
 
-        public async Task<bool> Update(UpdateFacultyCommand command)
+        public async Task<bool> Update(FacultyUpdateInputCommand command)
         {
-            var _update = new UpdateFacultyCommandHandler(_repository);
+            var _update = new FacultyUpdateCommandHandler(_repository);
             return await _update.HandleAsync(command);
         }
 
-        public async Task<bool> Delete(DeleteFacultyCommand command)
+        public async Task<bool> Delete(FacultyDeleteInputCommand command)
         {
-            var _delete = new DeleteFacultyCommandHandler(_repository);
+            var _delete = new FacultyDeleteCommandHandler(_repository);
             return await _delete.HandleAsync(command);
         }
 

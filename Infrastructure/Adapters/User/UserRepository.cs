@@ -121,19 +121,18 @@ namespace Infrastructure.Adapters.User
         }
 
 
-        public async Task<bool> IsUserType(string userId, string type)
+        public async Task<UserEntity?> IsUserType(string userId, string type)
         {
 
             var user = await _collection.Find(u => u.Id == userId).FirstOrDefaultAsync();
 
             if (user.TypeUser == type && user != null)
             {
-
-                return true;
+                return user;
             }
 
 
-            return false;
+            return null;
         }
 
         public async Task<bool> Update(UserEntity entity)

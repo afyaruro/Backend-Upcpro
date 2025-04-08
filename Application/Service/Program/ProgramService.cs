@@ -19,27 +19,27 @@ namespace Application.Service.Program
             this._repositoryFaculty = repositoryFaculty;
         }
 
-        public async Task<CreateOutputProgramCommand> Create(CreateInputProgramCommand command)
+        public async Task<ProgramCreateOutputCommand> Create(ProgramCreateInputCommand command)
         {
-            var _create = new CreateProgramCommandHandler(_repository, _repositoryFaculty);
+            var _create = new ProgramCreateCommandHandler(_repository, _repositoryFaculty);
             return await _create.HandleAsync(command);
         }
 
-        public async Task<ResponseEntity<GetAllPageProgramOutputCommand>> GetAllPage(GetAllPageProgramInputCommand command)
+        public async Task<ResponseEntity<ProgramGetAllPageOutputCommand>> GetAllPage(ProgramGetAllPageInputCommand command)
         {
-            var _getAll = new GetAllPageProgramCommandHandler(_repository);
+            var _getAll = new ProgramGetAllPageCommandHandler(_repository);
             return await _getAll.HandleAsync(command);
         }
 
-        public async Task<bool> Update(UpdateProgramCommand command)
+        public async Task<bool> Update(ProgramUpdateInputCommand command)
         {
-            var _update = new UpdateProgramCommandHandler(_repository, _repositoryFaculty);
+            var _update = new ProgramUpdateCommandHandler(_repository, _repositoryFaculty);
             return await _update.HandleAsync(command);
         }
 
-        public async Task<bool> Delete(DeleteProgramCommand command)
+        public async Task<bool> Delete(ProgramDeleteInputCommand command)
         {
-            var _delete = new DeleteProgramCommandHandler(_repository);
+            var _delete = new ProgramDeleteCommandHandler(_repository);
             return await _delete.HandleAsync(command);
         }
 
