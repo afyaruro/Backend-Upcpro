@@ -26,11 +26,11 @@ namespace Application.Service.InfoQuestion.Commands.InfoQuestionCreate
                 throw new ValidationException(validationResult.Errors);
             }
 
-            var infoQuestion = new InfoQuestionEntity(context: command.Context, image: command.Image);
+            var infoQuestion = new InfoQuestionEntity(context: command.Context, image: command.Image, idCompetence: command.IdCompetence);
 
             var resp = await this._InfoQuestionRepository.Add(infoQuestion);
 
-            return new InfoQuestionCreateOutputCommand(context: resp.Context, image: resp.Image, id: resp.Id);
+            return new InfoQuestionCreateOutputCommand(context: resp.Context, image: resp.Image, id: resp.Id, idCompetence: resp.IdCompetence);
         }
     }
 }

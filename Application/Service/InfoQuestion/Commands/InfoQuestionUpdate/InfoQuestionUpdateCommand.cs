@@ -11,6 +11,7 @@ namespace Application.Service.InfoQuestion.Commands.InfoQuestionUpdate
         public string Image { get; set; }
         
         public string Id { get; set; }
+        public string IdCompetence { get; set; }
 
 
     }

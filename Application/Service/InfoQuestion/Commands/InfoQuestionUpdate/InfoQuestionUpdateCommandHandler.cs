@@ -26,7 +26,7 @@ namespace Application.Service.InfoQuestion.Commands.InfoQuestionUpdate
                 throw new ValidationException(validationResult.Errors);
             }
 
-            var InfoQuestion = new InfoQuestionEntity(image: command.Image, context: command.Context);
+            var InfoQuestion = new InfoQuestionEntity(image: command.Image, context: command.Context, idCompetence: command.IdCompetence);
 
             InfoQuestion.Id = command.Id;
             InfoQuestion.DateUpdate = DateTime.Now;
