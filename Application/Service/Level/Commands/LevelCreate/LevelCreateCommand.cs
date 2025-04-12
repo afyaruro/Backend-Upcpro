@@ -5,19 +5,21 @@ namespace Application.Service.Level.Commands.LevelCreate
         public int Level { get; set; }
         public int Dificulty { get; set; }
         public int Reward { get; set; }
-        public int NumQuestion { get; set; }
+        public List<string> Questions { get; set; }
+        public string IdCompetence { get; set; }
 
         public LevelCreateInputCommand()
         {
         }
 
         public LevelCreateInputCommand(int level, int dificulty, int reward,
-            int numQuestion)
+            List<string> questions, string idCompetence)
         {
             Level = level;
             Dificulty = dificulty;
             Reward = reward;
-            NumQuestion = numQuestion;
+            Questions = questions;
+            IdCompetence = idCompetence;
         }
     }
 
@@ -27,21 +29,23 @@ namespace Application.Service.Level.Commands.LevelCreate
         public int Level { get; set; }
         public int Dificulty { get; set; }
         public int Reward { get; set; }
-        public int NumQuestion { get; set; }
+        public List<string> Questions { get; set; }
+        public string IdCompetence { get; set; }
 
 
         public LevelOutputCreateCommand()
         {
         }
 
-        public LevelOutputCreateCommand(string id, int level, int dificulty, int numQuestion,
-            int reward)
+        public LevelOutputCreateCommand(string id, int level, int dificulty,
+            int reward, List<string> questions, string idCompetence)
         {
             Id = id;
             Level = level;
             Dificulty = dificulty;
             Reward = reward;
-            NumQuestion = numQuestion;
+            Questions = questions;
+            IdCompetence = idCompetence;
         }
     }
 }

@@ -9,13 +9,16 @@ namespace Application.Service.Program.Commands.ProgramGetAllPage
         public string Name { get; set; }
         public string Id { get; set; }
         public FacultyGetAllPageOutputCommand Faculty { get; set; }
+        public DateTime DateUpdate { get; set; }
 
-        public ProgramGetAllPageOutputCommand(string name, string id, FacultyGetAllPageOutputCommand faculty)
+        public ProgramGetAllPageOutputCommand(string name, string id, FacultyGetAllPageOutputCommand faculty, DateTime dateUpdate)
         {
             this.Name = name;
             this.Id = id;
             this.Faculty = faculty;
+            this.DateUpdate = dateUpdate;
         }
+        
     }
 
     public class ProgramGetAllPageInputCommand

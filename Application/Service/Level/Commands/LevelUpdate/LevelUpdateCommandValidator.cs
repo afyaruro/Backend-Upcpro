@@ -17,8 +17,14 @@ namespace Application.Service.Level.Commands.LevelUpdate
             RuleFor(_ => _.Reward).GreaterThanOrEqualTo(0)
                 .WithMessage("La recompensa no puede ser negativa");
 
-            RuleFor(_ => _.NumQuestion).GreaterThan(0)
-            .WithMessage("El numero de preguntas debe ser mayor que 0");
+            RuleFor(_ => _.Questions).NotEmpty()
+                .WithMessage("La lista de preguntas no puede estar vacía");
+
+            RuleFor(_ => _.IdCompetence)
+            .NotNull().WithMessage($"El Id del nivel no puede ser nulo")
+            .NotEmpty().WithMessage($"El Id del nivel es obligatorio")
+            .Must(id => IsValidObjectId.IsValid(id)).WithMessage($"El Id del nivel no es válido");
+
         }
 
 

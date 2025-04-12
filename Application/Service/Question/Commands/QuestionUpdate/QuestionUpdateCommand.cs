@@ -14,5 +14,7 @@ namespace Application.Service.Question.Commands.QuestionUpdate
         public int CorrectAnswer { get; set; }
         public string TypeQuestion { get; set; }
         public string IdInfoQuestion { get; set; }
+        public string IdCompetence { get; set; }
+
     }
 }

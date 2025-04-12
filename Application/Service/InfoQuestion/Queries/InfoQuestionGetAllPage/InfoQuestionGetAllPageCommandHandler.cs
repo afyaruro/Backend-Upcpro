@@ -38,7 +38,7 @@ namespace Application.Service.InfoQuestion.Commands.InfoQuestionGetAllPage
             responseCommands.listEntity = new List<InfoQuestionGetAllPageOutputCommand>();
             foreach (var entity in resp.listEntity!)
             {
-                var command = new InfoQuestionGetAllPageOutputCommand(context: entity.Context, id: entity.Id, image: entity.Image);
+                var command = new InfoQuestionGetAllPageOutputCommand(context: entity.Context, id: entity.Id, image: entity.Image, dateUpdate: entity.DateUpdate);
                 responseCommands.listEntity.Add(command);
             }
 

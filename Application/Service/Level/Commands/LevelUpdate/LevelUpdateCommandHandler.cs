@@ -1,4 +1,5 @@
 
+using Application.Base.Validate;
 using Application.Common.Exceptions;
 using Domain.Entity.Level;
 using Domain.Port.Level;
@@ -26,22 +27,32 @@ namespace Application.Service.Level.Commands.LevelUpdate
                 throw new ValidationException(validationResult.Errors);
             }
 
-            var Level = new LevelEntity(level: command.Level, dificulty: command.Dificulty, reward: command.Reward, numQuestion: command.NumQuestion);
+            var Level = new LevelEntity(level: command.Level, dificulty: command.Dificulty, reward: command.Reward, questions: command.Questions, idCompetence: command.IdCompetence);
             Level.Id = command.Id;
             Level.DateUpdate = DateTime.Now;
 
-            if(!await _LevelRepository.ExistById(Level.Id)){
-                throw new EntityNotFoundException("La competencia a actualizar no existe");
-            }
-
-            var exist = await _LevelRepository.ExistByLevel(Level.Level);
+            var exist = await _LevelRepository.ExistByLevel(level: command.Level, competenceId: command.IdCompetence);
             if (exist != null)
             {
-                if(exist.Id != Level.Id){
-                    throw new EntityExistException("El nuevo nivel a actualizar ya existe");
+                if (exist.Id != Level.Id)
+                {
+                    throw new EntityExistException("El nuevo nivel de la competencia a actualizar ya existe");
+                }
+                else
+                {
+                    List<string> questionsValidate = [];
+                    foreach (var questionId in command.Questions)
+                    {
+                        if (IsValidObjectId.IsValid(questionId))
+                        {
+                            questionsValidate.Add(questionId);
+                        }
+                    }
+
+                    Level.Questions = questionsValidate;
                 }
 
-            } 
+            }
 
             return await this._LevelRepository.Update(Level);
         }

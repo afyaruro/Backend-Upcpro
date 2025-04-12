@@ -26,33 +26,24 @@ namespace Domain.Entity.Question
         public string IdInfoQuestion { get; set; }
         [BsonElement("typeQuestion")]
         public string TypeQuestion { get; set; }
+        [BsonElement("idCompetence")]
+        public string IdCompetence { get; set; }
 
-        [BsonIgnore]
-        public InfoQuestionEntity? InfoQuestion { get; set; }
 
-        public QuestionEntity(
-            string enunciated,
-            string feedback,
-            string optionType,
-            string optionA,
-            string optionB,
-            string optionC,
-            string optionD,
-            int correctAnswer,
-            string idInfoQuestion,
-            string typeQuestion)
+        public QuestionEntity(string enunciated, string feedback, string optionType, string optionA, string optionB, string optionC, string optionD, int correctAnswer, string idInfoQuestion, string typeQuestion, string idCompetence)
         {
-            Enunciated = enunciated;
-            Feedback = feedback;
-            OptionType = optionType;
-            OptionA = optionA;
-            OptionB = optionB;
-            OptionC = optionC;
-            OptionD = optionD;
-            CorrectAnswer = correctAnswer;
-            IdInfoQuestion = idInfoQuestion;
-            TypeQuestion = typeQuestion;
-            DateUpdate = DateTime.Now;
+            this.Enunciated = enunciated;
+            this.Feedback = feedback;
+            this.OptionType = optionType;
+            this.OptionA = optionA;
+            this.OptionB = optionB;
+            this.OptionC = optionC;
+            this.OptionD = optionD;
+            this.CorrectAnswer = correctAnswer;
+            this.IdInfoQuestion = idInfoQuestion;
+            this.TypeQuestion = typeQuestion;
+            this.IdCompetence = idCompetence;
+            this.DateUpdate = DateTime.Now;
         }
 
 

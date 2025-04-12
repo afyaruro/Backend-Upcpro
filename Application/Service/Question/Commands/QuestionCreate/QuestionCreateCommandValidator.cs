@@ -44,6 +44,11 @@ namespace Application.Service.Question.Commands.QuestionCreate
                 .NotEmpty().WithMessage("El ID del contexto es obligatorio.")
                  .Must(id => IsValidObjectId.IsValid(id)).WithMessage("El Id del contexto no es válido");
 
+            RuleFor(_ => _.IdCompetence)
+                            .NotNull().WithMessage("El ID de la competencia no puede ser nulo.")
+                            .NotEmpty().WithMessage("El ID de la competencia es obligatorio.")
+                             .Must(id => IsValidObjectId.IsValid(id)).WithMessage("El Id de la competencia no es válido");
+
 
             RuleFor(_ => _.TypeQuestion)
                 .NotNull().WithMessage("El tipo de pregunta no puede ser nulo.")

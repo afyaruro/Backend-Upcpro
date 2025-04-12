@@ -38,10 +38,11 @@ namespace Infrastructure.Adapters.Level
             return await _collection.Find(c => c.Id == id).AnyAsync();
         }
 
-        public async Task<LevelEntity> ExistByLevel(int level)
+        public async Task<LevelEntity> ExistByLevel(int level, string competenceId)
         {
-            return await _collection.Find(c => c.Level == level).FirstOrDefaultAsync();
+            return await _collection.Find(c => c.Level == level && c.IdCompetence == competenceId).FirstOrDefaultAsync();
         }
+
 
         public async Task<ResponseEntity<LevelEntity>> GetAll(int page, int pageSize)
         {

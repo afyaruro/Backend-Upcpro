@@ -6,7 +6,7 @@ namespace Application.Service.Question.Commands.QuestionGetAllPage
 {
     public class QuestionGetAllPageOutputCommand
     {
-         public string Id { get; set; }
+        public string Id { get; set; }
         public string Enunciated { get; set; }
         public string Feedback { get; set; }
         public string OptionType { get; set; }
@@ -16,35 +16,41 @@ namespace Application.Service.Question.Commands.QuestionGetAllPage
         public string OptionD { get; set; }
         public int CorrectAnswer { get; set; }
         public string TypeQuestion { get; set; }
-        public InfoQuestionEntity? InfoQuestion { get; set; }
+        public string IdInfoQuestion { get; set; }
+        public string IdCompetence { get; set; }
+        public DateTime DateUpdate { get; set; }
 
-         public QuestionGetAllPageOutputCommand() { }
+        public QuestionGetAllPageOutputCommand() { }
 
-    public QuestionGetAllPageOutputCommand(
-        string id, 
-        string enunciated, 
-        string feedback, 
-        string optionType, 
-        string optionA, 
-        string optionB, 
-        string optionC, 
-        string optionD, 
-        int correctAnswer,
-        string typeQuestion,
-        InfoQuestionEntity? infoQuestion)
-    {
-        Id = id;
-        Enunciated = enunciated;
-        Feedback = feedback;
-        OptionType = optionType;
-        OptionA = optionA;
-        OptionB = optionB;
-        OptionC = optionC;
-        OptionD = optionD;
-        CorrectAnswer = correctAnswer;
-        TypeQuestion = typeQuestion;
-        InfoQuestion = infoQuestion;
-    }
+        public QuestionGetAllPageOutputCommand(
+            string enunciated,
+            string feedback,
+            string optionType,
+            string optionA,
+            string optionB,
+            string optionC,
+            string optionD,
+            int correctAnswer,
+            string idInfoQuestion,
+            string typeQuestion,
+            string idCompetence,
+            string id,
+            DateTime dateUpdate)
+        {
+            Enunciated = enunciated;
+            Feedback = feedback;
+            OptionType = optionType;
+            OptionA = optionA;
+            OptionB = optionB;
+            OptionC = optionC;
+            OptionD = optionD;
+            CorrectAnswer = correctAnswer;
+            IdInfoQuestion = idInfoQuestion;
+            TypeQuestion = typeQuestion;
+            IdCompetence = idCompetence;
+            Id = id;
+            DateUpdate = dateUpdate;
+        }
 
     }
 

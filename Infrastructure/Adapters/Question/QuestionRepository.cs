@@ -22,13 +22,6 @@ namespace Infrastructure.Adapters.Question
         {
             await _collection.InsertOneAsync(entity);
 
-            if (entity.IdInfoQuestion != null)
-            {
-                entity.InfoQuestion = await _collectionInfoQuestion
-                    .Find(iq => iq.Id == entity.IdInfoQuestion)
-                    .FirstOrDefaultAsync();
-            }
-
             return entity;
         }
 

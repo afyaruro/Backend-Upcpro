@@ -26,7 +26,7 @@ namespace Application.Service.Question.Commands.QuestionUpdate
                 throw new ValidationException(validationResult.Errors);
             }
 
-            var question = new QuestionEntity(enunciated: command.Enunciated, feedback: command.Feedback, optionType: command.OptionType, optionA: command.OptionA, optionB: command.OptionB, optionC: command.OptionC, optionD: command.OptionD, correctAnswer: command.CorrectAnswer, idInfoQuestion: command.IdInfoQuestion, typeQuestion: command.TypeQuestion);
+            var question = new QuestionEntity(enunciated: command.Enunciated, feedback: command.Feedback, optionType: command.OptionType, optionA: command.OptionA, optionB: command.OptionB, optionC: command.OptionC, optionD: command.OptionD, correctAnswer: command.CorrectAnswer, idInfoQuestion: command.IdInfoQuestion, typeQuestion: command.TypeQuestion, idCompetence: command.IdCompetence);
 
 
             question.Id = command.Id;

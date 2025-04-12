@@ -40,8 +40,8 @@ namespace Application.Service.Program.Commands.ProgramGetAllPage
             responseCommands.listEntity = new List<ProgramGetAllPageOutputCommand>();
             foreach (var entity in resp.listEntity!)
             {
-                var facultyCommand = entity.Faculty != null ? new FacultyGetAllPageOutputCommand(name: entity.Faculty.Name, id: entity.Faculty.Id) : null;
-                var command = new ProgramGetAllPageOutputCommand(name: entity.Name, id: entity.Id, faculty: facultyCommand!);
+                var facultyCommand = entity.Faculty != null ? new FacultyGetAllPageOutputCommand(name: entity.Faculty.Name, id: entity.Faculty.Id, dateUpdate: entity.Faculty.DateUpdate) : null;
+                var command = new ProgramGetAllPageOutputCommand(name: entity.Name, id: entity.Id, faculty: facultyCommand!, dateUpdate: entity.DateUpdate);
                 responseCommands.listEntity.Add(command);
             }
 

@@ -14,6 +14,8 @@ namespace Application.Service.Question.Commands.QuestionCreate
         public int CorrectAnswer { get; set; }
         public string IdInfoQuestion { get; set; }
         public string TypeQuestion { get; set; }
+        public string IdCompetence { get; set; }
+
         public QuestionCreateInputCommand() { }
 
         public QuestionCreateInputCommand(
@@ -26,7 +28,8 @@ namespace Application.Service.Question.Commands.QuestionCreate
             string optionD,
             int correctAnswer,
             string idInfoQuestion,
-            string typeQuestion)
+            string typeQuestion,
+            string idCompetence)
         {
             Enunciated = enunciated;
             Feedback = feedback;
@@ -38,6 +41,7 @@ namespace Application.Service.Question.Commands.QuestionCreate
             CorrectAnswer = correctAnswer;
             IdInfoQuestion = idInfoQuestion;
             TypeQuestion = typeQuestion;
+            IdCompetence = idCompetence;
         }
     }
 
@@ -53,7 +57,8 @@ namespace Application.Service.Question.Commands.QuestionCreate
         public string OptionD { get; set; }
         public int CorrectAnswer { get; set; }
         public string TypeQuestion { get; set; }
-        public InfoQuestionEntity? InfoQuestion { get; set; }
+        public string IdCompetence { get; set; }
+        public string IdInfoQuestion { get; set; }
 
         public QuestionCreateOutputCommand() { }
 
@@ -68,7 +73,8 @@ namespace Application.Service.Question.Commands.QuestionCreate
             string optionD,
             int correctAnswer,
             string typeQuestion,
-            InfoQuestionEntity? infoQuestion)
+            string idCompetence,
+            string idInfoQuestion)
         {
             Id = id;
             Enunciated = enunciated;
@@ -80,7 +86,8 @@ namespace Application.Service.Question.Commands.QuestionCreate
             OptionD = optionD;
             CorrectAnswer = correctAnswer;
             TypeQuestion = typeQuestion;
-            InfoQuestion = infoQuestion;
+            IdCompetence = idCompetence;
+            IdInfoQuestion = idInfoQuestion;
         }
     }
 }

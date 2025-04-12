@@ -6,12 +6,14 @@ namespace Application.Service.Faculty.Commands.FacultyGetAllPage
     {
         public string Name { get; set; }
         public string Id { get; set; }
-
-        public FacultyGetAllPageOutputCommand(string name, string id)
+        public DateTime DateUpdate { get; set; }
+        public FacultyGetAllPageOutputCommand(string name, string id, DateTime dateUpdate)
         {
             this.Name = name;
             this.Id = id;
+            this.DateUpdate = dateUpdate;
         }
+
     }
 
     public class FacultyGetAllPageInputCommand

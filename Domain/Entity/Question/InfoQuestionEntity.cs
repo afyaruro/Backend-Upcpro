@@ -10,14 +10,12 @@ namespace Domain.Entity.Question
         public string Context { get; set; }
         [BsonElement("image")]
         public string Image { get; set; }
-        [BsonElement("idCompetence")]
-        public string IdCompetence { get; set; }
+        
 
-        public InfoQuestionEntity(string context, string image, string idCompetence)
+        public InfoQuestionEntity(string context, string image)
         {
             this.Context = context;
             this.Image = image;
-            this.IdCompetence = idCompetence;
             this.DateUpdate = DateTime.Now;
         }
       

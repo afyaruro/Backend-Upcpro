@@ -8,22 +8,27 @@ namespace Application.Service.Faculty.Commands.FacultyGetAllPage
         public int Level { get; set; }
         public int Dificulty { get; set; }
         public int Reward { get; set; }
-        public int NumQuestion { get; set; }
+        public List<string> Questions { get; set; }
+        public string IdCompetence { get; set; }
+        public DateTime DateTime { get; set; }
 
 
         public LevelGetAllPageOutputCommand()
         {
         }
 
-        public LevelGetAllPageOutputCommand(string id, int level, int dificulty, int numQuestion,
-            int reward)
+        public LevelGetAllPageOutputCommand(string id, int level, int dificulty, string idCompetence, List<string> questions, int reward, DateTime dateTime)
         {
             Id = id;
             Level = level;
             Dificulty = dificulty;
+            Questions = questions;
+            IdCompetence = idCompetence;
             Reward = reward;
-            NumQuestion = numQuestion;
+            DateTime = dateTime;
         }
+         
+        
     }
 
     public class LevelGetAllPageInputCommand

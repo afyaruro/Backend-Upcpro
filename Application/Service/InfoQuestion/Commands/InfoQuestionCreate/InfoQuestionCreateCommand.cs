@@ -6,13 +6,11 @@ namespace Application.Service.InfoQuestion.Commands.InfoQuestionCreate
     {
         public string Context{ get; set; }
         public string Image { get; set; }
-        public string IdCompetence { get; set; }
 
-        public InfoQuestionCreateInputCommand(string context, string image, string idCompetence)
+        public InfoQuestionCreateInputCommand(string context, string image)
         {
             this.Context = context;
             this.Image = image;
-            this.IdCompetence = idCompetence;
         }
         
     }
@@ -22,15 +20,13 @@ namespace Application.Service.InfoQuestion.Commands.InfoQuestionCreate
         public string Context { get; set; }
         public string Image { get; set; }
         public string Id { get; set; }
-        public string IdCompetence { get; set; }
 
 
-        public InfoQuestionCreateOutputCommand(string context, string image, string id, string idCompetence)
+        public InfoQuestionCreateOutputCommand(string context, string image, string id)
         {
             this.Context = context;
             this.Image = image;
             this.Id = id;
-            this.IdCompetence = idCompetence;
         }
        
     }

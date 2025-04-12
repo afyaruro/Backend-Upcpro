@@ -14,7 +14,7 @@ namespace Infrastructure.Adapters.ResultLevel
 
         public ResultLevelRepository(MongoDBContext context)
         {
-            _collection = context._dbs.GetCollection<ResultLevelEntity>("ResultLevel");
+            _collection = context._dbs.GetCollection<ResultLevelEntity>("Result_Level");
 
 
         }
@@ -22,38 +22,23 @@ namespace Infrastructure.Adapters.ResultLevel
         public async Task<ResultLevelEntity> Add(ResultLevelEntity entity)
         {
             await _collection.InsertOneAsync(entity);
-
             return entity;
         }
 
-        public async Task<bool> Delete(string id)
+        public async Task<bool> Exist(string userId, string idCompetence)
         {
-            var result = await _collection.DeleteOneAsync(c => c.Id == id);
-            return result.DeletedCount > 0;
+            return await _collection.Find(c => c.UserId == userId && c.IdCompetence == idCompetence).AnyAsync();
         }
+
 
         public async Task<bool> ExistById(string id)
         {
             return await _collection.Find(c => c.Id == id).AnyAsync();
         }
 
-
-        public async Task<ResponseEntity<ResultLevelEntity>> GetAll(int page, int pageSize)
+        public Task<bool> ExistLevel(string userId, string idCompetence, string levelId)
         {
-            var totalRecords = await _collection.CountDocumentsAsync(_ => true);
-            var ResultLevels = await _collection.Find(_ => true)
-                .Skip((page - 1) * pageSize)
-                .Limit(pageSize)
-                .ToListAsync();
-
-            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-            var resp = new ResponseEntity<ResultLevelEntity>("Niveles Obtenidos", ResultLevels)
-            {
-                totalPages = totalPages,
-                totalRecords = (int)totalRecords
-            };
-
-            return resp;
+            return _collection.Find(c => c.UserId == userId && c.IdCompetence == idCompetence && c.PassedLevels.Contains(levelId)).AnyAsync();
         }
 
         public async Task<ResultLevelEntity> GetById(string id)
@@ -62,12 +47,48 @@ namespace Infrastructure.Adapters.ResultLevel
             return ResultLevel;
         }
 
-        public async Task<bool> Update(ResultLevelEntity entity)
+        public async Task<ResultLevelEntity> GetResultLevel(string userId, string idCompetence)
         {
-            var result = await _collection.ReplaceOneAsync(c => c.Id == entity.Id, entity);
-            return result.MatchedCount > 0;
+            var ResultLevel = await _collection.Find(c => c.UserId == userId && c.IdCompetence == idCompetence).FirstOrDefaultAsync();
+            return ResultLevel;
         }
 
- 
+        public async Task<(List<ResultLevelEntity>, int)> Ranking(string idCompetence, string idUser)
+        {
+            var filter = Builders<ResultLevelEntity>.Filter.Eq(c => c.IdCompetence, idCompetence);
+            var sort = Builders<ResultLevelEntity>.Sort.Descending(c => c.Score);
+
+            var topRankings = await _collection.Find(filter)
+                                                .Sort(sort)
+                                                .Limit(10)
+                                                .ToListAsync();
+
+            var allRankings = await _collection.Find(filter)
+                                                .Sort(sort)
+                                                .ToListAsync();
+
+            var userPosition = allRankings.FindIndex(c => c.UserId == idUser) + 1;
+
+            return (topRankings, userPosition);
+
+        }
+
+        public async Task<bool> Update(string levelId, double score, string id)
+        {
+            var update = Builders<ResultLevelEntity>.Update
+                            .AddToSet(c => c.PassedLevels, levelId)
+                            .Set(c => c.Score, score).Set(c => c.DateUpdate, DateTime.Now);
+
+            var result = await _collection.UpdateOneAsync(c => c.Id == id, update); return result.MatchedCount > 0;
+        }
+
+        public async Task<ResponseEntity<ResultLevelEntity>> GetAllUser(string userId)
+        {
+            var result = await _collection.Find(c => c.UserId == userId).ToListAsync();
+            if (result.Count == 0)
+                return new ResponseEntity<ResultLevelEntity>("No se encontraron resultados", false);
+            return new ResponseEntity<ResultLevelEntity>("Resultados encontrados", result);
+        }
+
     }
 }

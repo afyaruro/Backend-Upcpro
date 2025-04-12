@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Domain.Base.ResponseEntity;
 using Domain.Entity.Competence;
 using Domain.Port.Competence;
-using Domain.Port.Generic;
 using Infrastructure.Context.MongoDB;
 using MongoDB.Driver;
 

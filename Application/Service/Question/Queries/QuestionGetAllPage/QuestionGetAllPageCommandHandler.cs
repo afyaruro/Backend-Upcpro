@@ -38,7 +38,7 @@ namespace Application.Service.Question.Commands.QuestionGetAllPage
             responseCommands.listEntity = new List<QuestionGetAllPageOutputCommand>();
             foreach (var entity in resp.listEntity!)
             {
-                var command = new QuestionGetAllPageOutputCommand(enunciated: entity.Enunciated, feedback: entity.Feedback, optionType: entity.OptionType, optionA: entity.OptionA, optionB: entity.OptionB, optionC: entity.OptionC, optionD: entity.OptionD, correctAnswer: entity.CorrectAnswer, infoQuestion: entity.InfoQuestion, typeQuestion: entity.TypeQuestion, id: entity.Id);
+                var command = new QuestionGetAllPageOutputCommand(enunciated: entity.Enunciated, feedback: entity.Feedback, optionType: entity.OptionType, optionA: entity.OptionA, optionB: entity.OptionB, optionC: entity.OptionC, optionD: entity.OptionD, correctAnswer: entity.CorrectAnswer, idInfoQuestion: entity.IdInfoQuestion, typeQuestion: entity.TypeQuestion, id: entity.Id, dateUpdate: entity.DateUpdate, idCompetence: entity.IdCompetence);
                 responseCommands.listEntity.Add(command);
             }
 

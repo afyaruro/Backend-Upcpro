@@ -10,11 +10,13 @@ namespace Application.Service.InfoQuestion.Commands.InfoQuestionGetAllPage
         public string Context { get; set; }
         public string Image { get; set; }
         public string Id { get; set; }
+        public DateTime dateUpdate { get; set; }
 
-        public InfoQuestionGetAllPageOutputCommand(string id, string image, string context){
+        public InfoQuestionGetAllPageOutputCommand(string id, string image, string context, DateTime dateUpdate){
             this.Id = id;
             this.Image = image;
             this.Context = context;
+            this.dateUpdate = dateUpdate;
         }
 
     }

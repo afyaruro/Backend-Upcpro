@@ -28,3 +28,15 @@ dotnet add package Microsoft.AspNetCore.Http --version 2.3.0
 Domain
 
 dotnet add package MongoDB.Driver --version 3.3.0
+
+
+
+para el estado se debe crear algo parecido a questions pero para que 
+las cargue el docente con una retroalimentacion y un estado
+en caso tal sea valida ya el administrador la crea y cambia el estado
+
+estudiante
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2Y5ZTU0MGIwNmQ5YjcxNjI5ZTQ0ZDYiLCJqdGkiOiJlZWZhOWZjZi0zZjljLTRmMzItOThlYS1jYTkyYWU5MzAzMjIiLCJleHAiOjE3NDQ1MjkzNjAsImlzcyI6Ik5ldGZyZWVBdXRoU2VydmVyIiwiYXVkIjoiTmV0ZnJlZUNsaWVudHMifQ.H-Z1Ty-ln45M7QtlAV7TxpYCVKmGCLYqdIz4lm9ExNk
+
+
+admin

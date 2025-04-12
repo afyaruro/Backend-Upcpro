@@ -1,4 +1,5 @@
 
+using Application.Base.Validate;
 using Application.Common.Exceptions;
 using Domain.Entity.Level;
 using Domain.Port.Level;
@@ -24,15 +25,22 @@ namespace Application.Service.Level.Commands.LevelCreate
             {
                 throw new ValidationException(validationResult.Errors);
             }
-            if (await _LevelRepository.ExistByLevel(command.Level) != null)
+
+            if (await _LevelRepository.ExistByLevel(level: command.Level, competenceId: command.IdCompetence) != null)
             {
                 throw new EntityExistException("El nivel ya existe");
             }
 
+            List<string> questionsValidate = [];
+            foreach(var questionId in command.Questions){
+                if(IsValidObjectId.IsValid(questionId)){
+                    questionsValidate.Add(questionId);
+                }
+            }
 
-            var resp = await this._LevelRepository.Add(new LevelEntity(level: command.Level, dificulty: command.Dificulty, reward: command.Reward, numQuestion: command.NumQuestion));
+            var resp = await this._LevelRepository.Add(new LevelEntity(level: command.Level, dificulty: command.Dificulty, reward: command.Reward, idCompetence: command.IdCompetence, questions: questionsValidate));
 
-            return new LevelOutputCreateCommand(level: resp.Level, dificulty: resp.Dificulty, reward: resp.Reward, numQuestion: resp.NumQuestion, id: resp.Id);
+            return new LevelOutputCreateCommand(level: resp.Level, dificulty: resp.Dificulty, reward: resp.Reward, idCompetence: resp.IdCompetence, questions: resp.Questions, id: resp.Id);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Domain.Port.Level
     {
         Task<LevelEntity> GetById(string id);
         Task<bool> ExistById(string id);
-        Task<LevelEntity> ExistByLevel(int level);
+        Task<LevelEntity> ExistByLevel(int level, string competenceId);
         Task<LevelEntity> Add(LevelEntity entity);
         Task<bool> Update(LevelEntity entity);
         Task<bool> Delete(string id);

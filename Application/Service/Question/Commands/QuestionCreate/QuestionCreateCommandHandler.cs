@@ -11,7 +11,7 @@ namespace Application.Service.Question.Commands.QuestionCreate
         private readonly IQuestionRepository<QuestionEntity> _QuestionRepository;
         private readonly IQuestionRepository<InfoQuestionEntity> _InfoQuestionRepository;
 
-        
+
 
         public QuestionCreateCommandHandler(IQuestionRepository<QuestionEntity> questionRepository, IQuestionRepository<InfoQuestionEntity> infoQuestionRepository)
         {
@@ -35,11 +35,11 @@ namespace Application.Service.Question.Commands.QuestionCreate
                 throw new EntityNotFoundException("El contexto de la pregunta no existe");
             }
 
-            var question = new QuestionEntity(enunciated: command.Enunciated, feedback: command.Feedback, optionType: command.OptionType, optionA: command.OptionA, optionB: command.OptionB, optionC: command.OptionC, optionD: command.OptionD, correctAnswer: command.CorrectAnswer, idInfoQuestion: command.IdInfoQuestion, typeQuestion: command.TypeQuestion);
+            var question = new QuestionEntity(enunciated: command.Enunciated, feedback: command.Feedback, optionType: command.OptionType, optionA: command.OptionA, optionB: command.OptionB, optionC: command.OptionC, optionD: command.OptionD, correctAnswer: command.CorrectAnswer, idInfoQuestion: command.IdInfoQuestion, typeQuestion: command.TypeQuestion, idCompetence: command.IdCompetence);
 
             var resp = await this._QuestionRepository.Add(question);
 
-            return new QuestionCreateOutputCommand(enunciated: resp.Enunciated, feedback: resp.Feedback, optionType: resp.OptionType, optionA: resp.OptionA, optionB: resp.OptionB, optionC: resp.OptionC, optionD: resp.OptionD, correctAnswer: resp.CorrectAnswer, infoQuestion: resp.InfoQuestion, typeQuestion: resp.TypeQuestion, id: resp.Id);
+            return new QuestionCreateOutputCommand(enunciated: resp.Enunciated, feedback: resp.Feedback, optionType: resp.OptionType, optionA: resp.OptionA, optionB: resp.OptionB, optionC: resp.OptionC, optionD: resp.OptionD, correctAnswer: resp.CorrectAnswer, idCompetence: resp.IdCompetence, idInfoQuestion: resp.IdInfoQuestion, typeQuestion: resp.TypeQuestion, id: resp.Id);
         }
     }
 }
