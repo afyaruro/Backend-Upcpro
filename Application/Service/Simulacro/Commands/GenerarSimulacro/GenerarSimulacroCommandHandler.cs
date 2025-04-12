@@ -44,12 +44,7 @@ namespace Application.Service.Simulacro.Commands.GenerarSimulacro
 
             foreach (var competencia in respCompetencias.listEntity)
             {
-                var existNumQuestion = _simulacroRepository.ExistNumQuestion(simulacro.NumeroPreguntas / 4, competencia.Id);
                 
-                if (!existNumQuestion)
-                {
-                    throw new EntityNotFoundException($"No existe la cantidad de preguntas para la competencia {competencia.Name}");
-                }
                 var questionsCompetence = await _simulacroRepository.GenerateQuestionCompetence(numeroPreguntasByCompetence: simulacro.NumeroPreguntas / 4, idCompetence: competencia.Id);
                 if (questionsCompetence != null && questionsCompetence.Count != 0)
                 {

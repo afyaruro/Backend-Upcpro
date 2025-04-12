@@ -1,6 +1,4 @@
 
-using Application.Common.Exceptions;
-using Application.Service.Faculty.Commands.FacultyCreate;
 using Domain.Entity.Simulacros;
 using Domain.Port.Simulacro;
 using FluentValidation;

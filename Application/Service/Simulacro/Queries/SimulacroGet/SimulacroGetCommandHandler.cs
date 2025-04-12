@@ -1,5 +1,3 @@
-
-using Application.Service.Simulacro.Commands.SimulacroGet;
 using Domain.Base.ResponseEntity;
 using Domain.Entity.Simulacros;
 using Domain.Port.Simulacro;

@@ -40,3 +40,9 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2Y5ZTU0MGIwNmQ5YjcxNjI5ZTQ0ZDY
 
 
 admin
+
+
+
+docker build -t backend .
+
+docker run -d -p 8083:8081 --name backend-upcpro backend
