@@ -36,8 +36,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
-
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
                 var response = await _FacultyService.Create(dto);
 
                 if (response == null)
@@ -94,8 +97,11 @@ namespace WebAPI.Controller
             {
 
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
-
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _FacultyService.Update(dto);
 
@@ -134,8 +140,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
-
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
                 var result = await _FacultyService.Delete(dto);
                 if (!result)
                 {

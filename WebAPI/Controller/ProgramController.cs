@@ -37,8 +37,11 @@ namespace WebAPI.Controllers
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
-
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _ProgramService.Create(dto);
 
@@ -67,7 +70,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+
         [HttpPost("get-all")]
         public async Task<IActionResult> GetAll([FromBody] ProgramGetAllPageInputCommand dto)
         {
@@ -100,7 +103,11 @@ namespace WebAPI.Controllers
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _ProgramService.Update(dto);
 
@@ -138,8 +145,12 @@ namespace WebAPI.Controllers
         {
             try
             {
-                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var userId = HttpContext.User.FindFirst("uid")?.Value;
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var result = await _ProgramService.Delete(dto);
                 if (!result)
@@ -154,7 +165,7 @@ namespace WebAPI.Controllers
             }
             catch (ValidationException ex)
             {
-               return HandleValidationException(ex);
+                return HandleValidationException(ex);
             }
             catch (Exception)
             {

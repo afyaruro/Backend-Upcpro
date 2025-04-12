@@ -66,7 +66,12 @@ namespace WebAPI.Controller
             try
             {
 
-                await CheckAccess(userId: command.UserId!, userService: _userService, typeUser: "student");
+                var resp = await CheckAccess(userId: command.UserId!, userService: _userService, typeUser: "student");
+
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var token = _jwtService.generateToken(command.UserId);
                 return Ok(new { success = true, token = token });

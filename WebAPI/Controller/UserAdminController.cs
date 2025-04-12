@@ -36,7 +36,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
 
                 var response = await _userService.CreateForAdmin(dto, "admin");
@@ -72,7 +76,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _userService.CreateForAdmin(dto, "creator");
 
@@ -96,8 +104,8 @@ namespace WebAPI.Controller
             }
             catch (Exception)
             {
-               return InternalServerError();
-                 }
+                return InternalServerError();
+            }
         }
 
         [Authorize]
@@ -107,7 +115,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _userService.GetAllPage(dto);
 
@@ -123,7 +135,7 @@ namespace WebAPI.Controller
             catch (Exception)
             {
                 return InternalServerError();
-              }
+            }
         }
 
         [Authorize]
@@ -134,7 +146,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _userService.UpdateForAdmin(dto);
                 if (!response)
@@ -163,7 +179,7 @@ namespace WebAPI.Controller
             catch (Exception)
             {
                 return InternalServerError();
-             }
+            }
         }
 
         [Authorize]
@@ -174,7 +190,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _userService.UpdateMailForAdmin(dto);
 
@@ -204,7 +224,7 @@ namespace WebAPI.Controller
             catch (Exception)
             {
                 return InternalServerError();
-             }
+            }
         }
 
         [Authorize]
@@ -214,8 +234,12 @@ namespace WebAPI.Controller
 
             try
             {
-               var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var userId = HttpContext.User.FindFirst("uid")?.Value;
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _userService.UpdatePasswordForAdmin(dto);
                 if (!response)

@@ -1,6 +1,4 @@
 
-using System.Net;
-using Application.Base.Validate;
 using Application.Common.Exceptions;
 using Application.Service.Question;
 using Application.Service.Question.Commands.QuestionCreate;
@@ -38,8 +36,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
-
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _QuestionService.Create(dto);
 
@@ -73,6 +74,13 @@ namespace WebAPI.Controller
         {
             try
             {
+                var userId = HttpContext.User.FindFirst("uid")?.Value;
+                var resp = await CheckAccessAdminStudent(userId: userId!, userService: _userService);
+                if (resp != null)
+                {
+                    return resp;
+                }
+
                 var response = await _QuestionService.GetAllPage(dto);
 
                 if (response.isError)
@@ -111,7 +119,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _QuestionService.Update(dto);
 
@@ -150,7 +162,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var result = await _QuestionService.Delete(dto);
                 if (!result)

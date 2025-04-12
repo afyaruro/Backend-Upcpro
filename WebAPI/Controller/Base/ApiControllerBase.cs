@@ -35,23 +35,55 @@ namespace WebAPI.Controller.Base
             return null;
         }
 
-         protected async Task<IActionResult?> CheckAccessAll(string userId, UserService userService)
+        protected async Task<IActionResult?> CheckAccessAdminStudent(string userId, UserService userService)
         {
 
-                if (!IsValidObjectId.IsValid(userId!))
-                {
-                    return BadRequest("El usuario no es valido");
-                }
+            if (await ValidUser.IsUserAccess(userId!, userService, "student"))
+            {
+                return null;
+            } else if(await ValidUser.IsUserAccess(userId!, userService, "admin"))
+            {
+                return null;
+            }
 
-                if (!await userService.ExistById(userId!))
-                {
-                    return NotFound("No Existe el usuario");
-                }
+
+            return Unauthorized(new { success = false, message = "No cuentas con permisos para esta acción" });
+
+        }
+
+        protected async Task<IActionResult?> CheckAccessAdminCreator(string userId, UserService userService)
+        {
+
+            if (await ValidUser.IsUserAccess(userId!, userService, "admin"))
+            {
+                return null;
+            } else if(await ValidUser.IsUserAccess(userId!, userService, "creator"))
+            {
+                return null;
+            }
+
+
+            return Unauthorized(new { success = false, message = "No cuentas con permisos para esta acción" });
+
+        }
+
+        protected async Task<IActionResult?> CheckAccessAll(string userId, UserService userService)
+        {
+
+            if (!IsValidObjectId.IsValid(userId!))
+            {
+                return BadRequest("El usuario no es valido");
+            }
+
+            if (!await userService.ExistById(userId!))
+            {
+                return NotFound("No Existe el usuario");
+            }
 
             return null;
         }
 
-        
+
 
         protected IActionResult InternalServerError()
         {

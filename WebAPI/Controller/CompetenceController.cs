@@ -35,7 +35,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _competenceService.Create(dto);
 
@@ -68,6 +72,13 @@ namespace WebAPI.Controller
             try
             {
 
+                var userId = HttpContext.User.FindFirst("uid")?.Value;
+                var resp = await CheckAccessAll(userId: userId!, userService: _userService);
+                if (resp != null)
+                {
+                    return resp;
+                }
+
                 var response = await _competenceService.GetAllPage(dto);
 
                 if (response.isError)
@@ -96,8 +107,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
-
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _competenceService.Update(dto);
 
@@ -136,7 +150,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var result = await _competenceService.Delete(dto);
                 if (!result)

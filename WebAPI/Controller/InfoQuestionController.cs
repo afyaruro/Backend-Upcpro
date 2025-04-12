@@ -1,6 +1,3 @@
-
-using System.Net;
-using Application.Base.Validate;
 using Application.Common.Exceptions;
 using Application.Service.InfoQuestion;
 using Application.Service.InfoQuestion.Commands.InfoQuestionCreate;
@@ -38,7 +35,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _InfoQuestionService.Create(dto);
 
@@ -73,6 +74,13 @@ namespace WebAPI.Controller
             try
             {
 
+                var userId = HttpContext.User.FindFirst("uid")?.Value;
+                var resp = await CheckAccessAdminStudent(userId: userId!, userService: _userService); 
+                if (resp != null)
+                {
+                    return resp;
+                }
+
                 var response = await _InfoQuestionService.GetAllPage(dto);
 
                 if (response.isError)
@@ -100,7 +108,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _InfoQuestionService.Update(dto);
 
@@ -139,7 +151,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccess(userId: userId!, userService: _userService, "admin");
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var result = await _InfoQuestionService.Delete(dto);
                 if (!result)

@@ -69,7 +69,11 @@ namespace WebAPI.Controller
             {
 
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccessAll(userId!, _userService);
+                var resp = await CheckAccessAll(userId!, _userService);
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _userService.Update(dto, userId!);
                 if (!response)
@@ -109,7 +113,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccessAll(userId!, _userService);
+                var resp = await CheckAccessAll(userId!, _userService);
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _userService.UpdateMail(dto, userId!);
                 if (!response)
@@ -149,7 +157,11 @@ namespace WebAPI.Controller
             try
             {
                 var userId = HttpContext.User.FindFirst("uid")?.Value;
-                await CheckAccessAll(userId!, _userService);
+                var resp = await CheckAccessAll(userId!, _userService);
+                if (resp != null)
+                {
+                    return resp;
+                }
 
                 var response = await _userService.UpdatePassword(dto, userId!);
                 if (!response)
