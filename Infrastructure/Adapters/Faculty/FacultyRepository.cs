@@ -53,6 +53,28 @@ namespace Infrastructure.Adapters.Faculty
             return resp;
         }
 
+        public async Task<ResponseEntity<FacultyEntity>> GetAll(DateTime lastSyncDate)
+        {
+            try
+            {
+                var filter = Builders<FacultyEntity>.Filter.Gt(s => s.DateUpdate, lastSyncDate);
+                var facultad = await _collection.Find(filter).ToListAsync();
+
+                if (facultad == null || !facultad.Any())
+                {
+                    return new ResponseEntity<FacultyEntity>($"No se encontraron facultades actualizadas desde {lastSyncDate}", false);
+                    
+                }
+
+                return new ResponseEntity<FacultyEntity>($"Se encontraron {facultad.Count} facultades actualizadas desde {lastSyncDate}", facultad);
+                
+            }
+            catch (Exception ex)
+            {
+                return new ResponseEntity<FacultyEntity>($"Error: {ex.Message}", false);
+            }
+        }
+
         public async Task<bool> Update(FacultyEntity entity)
         {
             var result = await _collection.ReplaceOneAsync(c => c.Id == entity.Id, entity);

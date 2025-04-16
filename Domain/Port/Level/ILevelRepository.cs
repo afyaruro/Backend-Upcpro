@@ -13,5 +13,6 @@ namespace Domain.Port.Level
         Task<bool> Update(LevelEntity entity);
         Task<bool> Delete(string id);
         Task<ResponseEntity<LevelEntity>> GetAll(int page, int pageSize);
+
     }
 }

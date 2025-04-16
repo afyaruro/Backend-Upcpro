@@ -52,6 +52,28 @@ namespace Infrastructure.Adapters.Question
             return resp;
         }
 
+        public async Task<ResponseEntity<QuestionEntity>> GetAll(DateTime lastSyncDate)
+        {
+            try
+            {
+                var filter = Builders<QuestionEntity>.Filter.Gt(s => s.DateUpdate, lastSyncDate);
+                var preguntas = await _collection.Find(filter).ToListAsync();
+
+                if (preguntas == null || !preguntas.Any())
+                {
+                    return new ResponseEntity<QuestionEntity>($"No se encontraron preguntas actualizadas desde {lastSyncDate}", false);
+                    
+                }
+
+                return new ResponseEntity<QuestionEntity>($"Se encontraron {preguntas.Count} preguntas actualizadas desde {lastSyncDate}", preguntas);
+                
+            }
+            catch (Exception ex)
+            {
+                return new ResponseEntity<QuestionEntity>($"Error: {ex.Message}", false);
+            }
+        }
+
         public async Task<QuestionEntity?> GetById(string id)
         {
             return await _collection.Find(c => c.Id == id).FirstOrDefaultAsync();

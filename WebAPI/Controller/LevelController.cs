@@ -65,19 +65,11 @@ namespace WebAPI.Controller
             }
         }
 
-        [Authorize]
         [HttpPost("get-all")]
         public async Task<IActionResult> GetAll([FromBody] LevelGetAllPageInputCommand dto)
         {
             try
             {
-
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-                var resp = await CheckAccessAdminStudent(userId: userId!, userService: _userService);
-                if (resp != null)
-                {
-                    return resp;
-                }
 
                 var response = await _LevelService.GetAllPage(dto);
 

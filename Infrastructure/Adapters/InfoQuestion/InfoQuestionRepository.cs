@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Domain.Base.ResponseEntity;
 using Domain.Entity.Question;
 using Domain.Port;
@@ -50,6 +47,28 @@ namespace Infrastructure.Adapters.InfoQuestion
             resp.totalPages = totalPages;
             resp.totalRecords = (int)totalRecords;
             return resp;
+        }
+
+        public async Task<ResponseEntity<InfoQuestionEntity>> GetAll(DateTime lastSyncDate)
+        {
+            try
+            {
+                var filter = Builders<InfoQuestionEntity>.Filter.Gt(s => s.DateUpdate, lastSyncDate);
+                var info = await _collection.Find(filter).ToListAsync();
+
+                if (info == null || !info.Any())
+                {
+                    return new ResponseEntity<InfoQuestionEntity>($"No se encontraron contextos de pregunta actualizados desde {lastSyncDate}", false);
+                    
+                }
+
+                return new ResponseEntity<InfoQuestionEntity>($"Se encontraron {info.Count} contextos de pregunta actualizados desde {lastSyncDate}", info);
+                
+            }
+            catch (Exception ex)
+            {
+                return new ResponseEntity<InfoQuestionEntity>($"Error: {ex.Message}", false);
+            }
         }
 
         public async Task<InfoQuestionEntity?> GetById(string id)

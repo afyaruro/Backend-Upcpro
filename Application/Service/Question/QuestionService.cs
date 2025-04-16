@@ -42,6 +42,12 @@ namespace Application.Service.Question
             return await _delete.HandleAsync(command);
         }
 
+        public async Task<ResponseEntity<QuestionGetAllPageOutputCommand>> GetAllSync(QuestionGetAllPageSyncInputCommand command)
+        {
+            var _getAll = new QuestionGetAllPageSyncCommandHandler(_repository);
+            return await _getAll.HandleAsync(command);
+        }
+
 
     }
 }

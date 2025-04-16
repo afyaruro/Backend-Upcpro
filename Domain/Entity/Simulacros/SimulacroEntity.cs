@@ -12,6 +12,7 @@ namespace Domain.Entity.Simulacros
         public int NumeroPreguntas { get; set; }
         [BsonElement("fechaLimite")]
         public DateTime FechaLimite { get; set; }
+        
         public SimulacroEntity()
         {
             this.DateUpdate = DateTime.Now;

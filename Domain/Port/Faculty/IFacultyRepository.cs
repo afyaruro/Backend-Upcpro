@@ -12,5 +12,8 @@ namespace Domain.Port.Faculty
         Task<bool> Update(FacultyEntity entity);
         Task<bool> Delete(string id);
         Task<ResponseEntity<FacultyEntity>> GetAll(int page, int size);
+        Task<ResponseEntity<FacultyEntity>> GetAll(DateTime lastSyncDate);
+
+
     }
 }

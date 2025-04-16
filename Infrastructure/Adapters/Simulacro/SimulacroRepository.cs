@@ -76,39 +76,7 @@ namespace Infrastructure.Adapters.Simulacro
 
 
 
-        // public async Task<List<string>> GenerateQuestionCompetence(int numeroPreguntasByCompetence, string idCompetence)
-        // {
-        //     var filterQuestions = Builders<QuestionEntity>.Filter.Eq(q => q.IdCompetence, idCompetence);
-        //     var allQuestions = await _collectionQuestion.Find(filterQuestions).ToListAsync();
 
-        //     if (allQuestions == null || !allQuestions.Any())
-        //     {
-        //         return [];
-        //     }
-        //     var random = new Random();
-        //     var selectedQuestions = allQuestions.OrderBy(x => random.Next()).Take(numeroPreguntasByCompetence).ToList();
-
-        //     if (selectedQuestions.Count < numeroPreguntasByCompetence && allQuestions.Any())
-        //     {
-        //         while (selectedQuestions.Count < numeroPreguntasByCompetence)
-        //         {
-        //             int index = random.Next(allQuestions.Count);
-        //             selectedQuestions.Add(allQuestions[index]);
-
-        //             if (selectedQuestions.Count >= numeroPreguntasByCompetence ||
-        //                 selectedQuestions.Count >= allQuestions.Count)
-        //             {
-        //                 break;
-        //             }
-        //         }
-        //     }
-
-        //     var questionIds = selectedQuestions.Take(numeroPreguntasByCompetence)
-        //                                       .Select(q => q.Id)
-        //                                       .ToList();
-
-        //     return questionIds;
-        // }
 
         public async Task<List<string>> GenerateQuestionCompetence(int numeroPreguntasByCompetence, string idCompetence)
         {
@@ -153,5 +121,7 @@ namespace Infrastructure.Adapters.Simulacro
             return false;
 
         }
+
+        
     }
 }

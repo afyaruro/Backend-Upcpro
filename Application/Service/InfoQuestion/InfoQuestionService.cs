@@ -37,6 +37,12 @@ namespace Application.Service.InfoQuestion
             return await _delete.HandleAsync(command);
         }
 
+        public async Task<ResponseEntity<InfoQuestionGetAllPageOutputCommand>> GetAllSync(InfoQuestionGetAllPageSyncInputCommand command)
+        {
+            var _getAll = new InfoQuestionGetAllPageSyncCommandHandler(_repository);
+            return await _getAll.HandleAsync(command);
+        }
+
 
     }
 }

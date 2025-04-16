@@ -15,6 +15,9 @@ namespace Domain.Port.Level
         Task<(List<ResultLevelEntity>, int)> Ranking(string idCompetence, string idUser);
         Task<bool> Update(string levelId, double score, string id);
         Task<ResponseEntity<ResultLevelEntity>> GetAllUser(string userId);
+
+        
+
         
     }
 }

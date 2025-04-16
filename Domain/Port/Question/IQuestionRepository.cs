@@ -10,6 +10,8 @@ namespace Domain.Port
         Task<bool> Update(E entity);
         Task<bool> Delete(string id);
         Task<ResponseEntity<E>> GetAll(int page, int pageSize);
+        Task<ResponseEntity<E>> GetAll(DateTime lastSyncDate);
+
 
     }
 }

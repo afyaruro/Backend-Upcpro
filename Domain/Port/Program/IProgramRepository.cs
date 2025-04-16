@@ -12,5 +12,7 @@ namespace Domain.Port.Program
         Task<bool> Update(ProgramEntity entity);
         Task<bool> Delete(string id);
         Task<ResponseEntity<ProgramEntity>> GetAll(int page, int size);
+        Task<ResponseEntity<ProgramEntity>> GetAll(DateTime lastSyncDate);
+
     }
 }

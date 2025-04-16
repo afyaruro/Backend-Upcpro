@@ -2,6 +2,7 @@
 using Application.Base.Validate;
 using Application.Service.Competence.Commands.CompetenceCreate;
 using Application.Service.Competence.Commands.CompetenceDelete;
+using Application.Service.Competence.Commands.CompetenceGetAllPage;
 using Application.Service.Competence.Commands.CompetenceUpdate;
 using Application.Service.Faculty.Commands.FacultyGetAllPage;
 using Domain.Base.ResponseEntity;
@@ -37,6 +38,12 @@ namespace Application.Service.Competence
         {
             var _delete = new CompetenceDeleteCommandHandler(_repository);
             return await _delete.HandleAsync(command);
+        }
+
+        public async Task<ResponseEntity<CompetenceGetAllPageOutputCommand>> GetAllSync(CompetenceGetAllPageSyncInputCommand command)
+        {
+            var _getAll = new CompetenceGetAllPageSyncCommandHandler(_repository);
+            return await _getAll.HandleAsync(command);
         }
 
         

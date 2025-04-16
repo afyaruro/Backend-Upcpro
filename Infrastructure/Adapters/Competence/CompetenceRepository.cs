@@ -55,6 +55,28 @@ namespace Infrastructure.Adapters.Competence
             return resp;
         }
 
+        public async Task<ResponseEntity<CompetenceEntity>> GetAll(DateTime lastSyncDate)
+        {
+            try
+            {
+                var filter = Builders<CompetenceEntity>.Filter.Gt(s => s.DateUpdate, lastSyncDate);
+                var competencias = await _collection.Find(filter).ToListAsync();
+
+                if (competencias == null || !competencias.Any())
+                {
+                    return new ResponseEntity<CompetenceEntity>($"No se encontraron competencias actualizadas desde {lastSyncDate}", false);
+                    
+                }
+
+                return new ResponseEntity<CompetenceEntity>($"Se encontraron {competencias.Count} competencias actualizadas desde {lastSyncDate}", competencias);
+                
+            }
+            catch (Exception ex)
+            {
+                return new ResponseEntity<CompetenceEntity>($"Error: {ex.Message}", false);
+            }
+        }
+
         public async Task<bool> Update(CompetenceEntity entity)
         {
             var result = await _collection.ReplaceOneAsync(c => c.Id == entity.Id, entity);

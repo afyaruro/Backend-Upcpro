@@ -78,6 +78,27 @@ namespace Infrastructure.Adapters.Program
             return resp;
         }
 
+        public async Task<ResponseEntity<ProgramEntity>> GetAll(DateTime lastSyncDate)
+        {
+            try
+            {
+                var filter = Builders<ProgramEntity>.Filter.Gt(s => s.DateUpdate, lastSyncDate);
+                var programas = await _collection.Find(filter).ToListAsync();
+
+                if (programas == null || !programas.Any())
+                {
+                    return new ResponseEntity<ProgramEntity>($"No se encontraron programas actualizados desde {lastSyncDate}", false);
+                    
+                }
+
+                return new ResponseEntity<ProgramEntity>($"Se encontraron {programas.Count} programas actualizados desde {lastSyncDate}", programas);
+                
+            }
+            catch (Exception ex)
+            {
+                return new ResponseEntity<ProgramEntity>($"Error: {ex.Message}", false);
+            }
+        }
 
         public async Task<bool> Update(ProgramEntity entity)
         {

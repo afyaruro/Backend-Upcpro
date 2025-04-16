@@ -74,7 +74,7 @@ namespace WebAPI.Controller
                 }
 
                 var token = _jwtService.generateToken(command.UserId);
-                return Ok(new { success = true, token = token });
+                return Ok(new { success = true, token = token, user = await _userService.IsUserType("student", command.UserId) });
 
 
             }

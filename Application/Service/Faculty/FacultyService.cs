@@ -36,6 +36,12 @@ namespace Application.Service.Faculty
             return await _delete.HandleAsync(command);
         }
 
+        public async Task<ResponseEntity<FacultyGetAllPageOutputCommand>> GetAllSync(FacultyGetAllPageSyncInputCommand command)
+        {
+            var _getAll = new FacultyGetAllPageSyncCommandHandler(_repository);
+            return await _getAll.HandleAsync(command);
+        }
+
 
     }
 }

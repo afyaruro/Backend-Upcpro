@@ -1,5 +1,6 @@
 
 
+using Domain.Base.ResponseEntity;
 using Domain.Entity.Simulacros;
 
 namespace Domain.Port.Certificado
@@ -9,5 +10,6 @@ namespace Domain.Port.Certificado
         Task<bool> CrearAsync(SimulacroResultEntity simulacro);
         Task<bool> ExistByUser(string idUser, string idSimulacro);
         Task<List<SimulacroResultEntity>> GetAll(string idUser);
+
     }
 }

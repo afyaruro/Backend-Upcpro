@@ -43,6 +43,12 @@ namespace Application.Service.Program
             return await _delete.HandleAsync(command);
         }
 
+        public async Task<ResponseEntity<ProgramGetAllPageOutputCommand>> GetAllSync(ProgramGetAllPageSyncInputCommand command)
+        {
+            var _getAll = new ProgramGetAllPageSyncCommandHandler(_repository);
+            return await _getAll.HandleAsync(command);
+        }
+
 
     }
 }
