@@ -40,7 +40,13 @@ namespace Application.Service.Certificado.Commands.CertificadoCreate
                 numCorrectasCiudadanas: command.NumCorrectasCiudadanas,
                 numCorrectasIngles: command.NumCorrectasIngles,
                 numCorrectasRazonamiento: command.NumCorrectasRazonamiento,
-                numCorrectasLectura: command.NumCorrectasLectura
+                numCorrectasLectura: command.NumCorrectasLectura,
+                totalCiudadanas: command.TotalCiudadanas,
+                totalIngles: command.TotalIngles,
+                totalRazonamiento: command.TotalRazonamiento,
+                totalLectura: command.TotalLectura,
+                puntaje: command.Puntaje,
+                jsonQuestions: command.JsonQuestions
             ));
         }
     }

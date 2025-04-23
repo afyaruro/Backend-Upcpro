@@ -29,7 +29,8 @@ namespace Application.Service.Simulacro.Commands.SimulacroUpdate
             var Simulacro = new SimulacroEntity(
                 command.Duracion,
                 command.NumeroPreguntas,
-                command.FechaLimite
+                command.FechaLimite,
+                command.Type
             );
 
             Simulacro.Id = command.Id;

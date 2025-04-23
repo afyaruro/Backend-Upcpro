@@ -17,7 +17,7 @@ namespace Application.Service.Simulacro.Commands.GenerarSimulacro
             this._competenceRepository = competenceRepository;
         }
 
-        public async Task<List<string>>  HandleAsync(GenerarSimulacroInputCommand command)
+        public async Task<List<string>> HandleAsync(GenerarSimulacroInputCommand command)
         {
 
             var validator = new GenerarSimulacroCommandValidator();
@@ -34,17 +34,41 @@ namespace Application.Service.Simulacro.Commands.GenerarSimulacro
                 throw new EntityNotFoundException("El Simulacro no existe");
             }
 
+            List<string> listPreguntas = [];
+
+            if (simulacro.Type != "ALL")
+            {
+
+                var existCompetence = await _competenceRepository.ExistById(simulacro.Type);
+
+                if (existCompetence)
+                {
+                    var questionsCompetence = await _simulacroRepository.GenerateQuestionCompetence(numeroPreguntasByCompetence: simulacro.NumeroPreguntas, idCompetence: simulacro.Type);
+                    if (questionsCompetence != null && questionsCompetence.Count != 0)
+                    {
+                        listPreguntas.AddRange(questionsCompetence);
+                    }
+                }
+                else
+                {
+                    throw new EntityNotFoundException("Error al generar el simulacro");
+                }
+
+                return listPreguntas;
+
+            }
+
+
             var respCompetencias = await _competenceRepository.GetAll(page: 1, size: 4);
             if (respCompetencias.listEntity == null || respCompetencias.listEntity.Count == 0)
             {
-                throw new EntityNotFoundException("No se encontraron competencias");
+                throw new EntityNotFoundException("Error al generar el simulacro");
             }
 
-            List<string> listPreguntas = [];
 
             foreach (var competencia in respCompetencias.listEntity)
             {
-                
+
                 var questionsCompetence = await _simulacroRepository.GenerateQuestionCompetence(numeroPreguntasByCompetence: simulacro.NumeroPreguntas / 4, idCompetence: competencia.Id);
                 if (questionsCompetence != null && questionsCompetence.Count != 0)
                 {

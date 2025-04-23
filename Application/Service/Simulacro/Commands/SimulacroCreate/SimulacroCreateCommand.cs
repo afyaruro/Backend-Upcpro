@@ -6,15 +6,17 @@ namespace Application.Service.Simulacro.Commands.SimulacroCreate
     public class SimulacroCreateInputCommand
     {
 
+        public string Type { get; set; }
         public int Duracion { get; set; }
         public int NumeroPreguntas { get; set; }
         public DateTime FechaLimite { get; set; }
 
-        public SimulacroCreateInputCommand(int duracion, int numeroPreguntas, DateTime fechaLimite)
+        public SimulacroCreateInputCommand(int duracion, int numeroPreguntas, DateTime fechaLimite, string type)
         {
             this.Duracion = duracion;
             this.NumeroPreguntas = numeroPreguntas;
             this.FechaLimite = fechaLimite;
+            this.Type = type;
         }
     }
 

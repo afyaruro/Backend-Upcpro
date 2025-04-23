@@ -14,6 +14,12 @@ namespace Domain.Entity.Simulacros
         public int NumCorrectasIngles { get; set; }
         public int NumCorrectasRazonamiento { get; set; }
         public int NumCorrectasLectura { get; set; }
+        public int TotalCiudadanas { get; set; }
+        public int TotalIngles { get; set; }
+        public int TotalRazonamiento { get; set; }
+        public int TotalLectura { get; set; }
+        public double Puntaje { get; set; }
+        public string JsonQuestions { get; set; }
 
 
         public SimulacroResultEntity()
@@ -21,10 +27,10 @@ namespace Domain.Entity.Simulacros
             this.DateUpdate = DateTime.Now;
         }
 
-        public SimulacroResultEntity(string idSimulacro, string idEstudiante, int duracion, DateTime fecha, int numCorrectasCiudadanas, int numCorrectasIngles, int numCorrectasRazonamiento, int numCorrectasLectura)
+        public SimulacroResultEntity(string idSimulacro, string idEstudiante, int duracion, DateTime fecha, int numCorrectasCiudadanas, int numCorrectasIngles, int numCorrectasRazonamiento, int numCorrectasLectura, int totalCiudadanas, int totalIngles, int totalLectura, int totalRazonamiento, double puntaje, string jsonQuestions)
         {
             IdSimulacro = idSimulacro;
-            IdEstudiante = idEstudiante; 
+            IdEstudiante = idEstudiante;
             Duracion = duracion;
             Fecha = fecha;
             NumCorrectasCiudadanas = numCorrectasCiudadanas;
@@ -32,6 +38,12 @@ namespace Domain.Entity.Simulacros
             NumCorrectasRazonamiento = numCorrectasRazonamiento;
             NumCorrectasLectura = numCorrectasLectura;
             this.DateUpdate = DateTime.Now;
+            TotalCiudadanas = totalCiudadanas;
+            TotalIngles = totalIngles;
+            TotalLectura = totalLectura;
+            TotalRazonamiento = totalRazonamiento;
+            Puntaje = puntaje;
+            JsonQuestions = jsonQuestions;
         }
 
     }

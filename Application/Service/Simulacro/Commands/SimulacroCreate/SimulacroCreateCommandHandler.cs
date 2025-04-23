@@ -1,4 +1,5 @@
 
+using Application.Common.Exceptions;
 using Domain.Entity.Simulacros;
 using Domain.Port.Simulacro;
 using FluentValidation;
@@ -26,8 +27,8 @@ namespace Application.Service.Simulacro.Commands.SimulacroCreate
                 throw new ValidationException(validationResult.Errors);
             }
 
-            var resp = await this._simulacroRepository.CrearAsync(new SimulacroEntity(duracion: command.Duracion, numeroPreguntas: command.NumeroPreguntas, fechaLimite: command.FechaLimite));
-            
+            var resp = await this._simulacroRepository.CrearAsync(new SimulacroEntity(duracion: command.Duracion, numeroPreguntas: command.NumeroPreguntas, fechaLimite: command.FechaLimite, type: command.Type));
+
             return new SimulacroCreateOutputCommand(
                 duracion: resp.Duracion,
                 numeroPreguntas: resp.NumeroPreguntas,

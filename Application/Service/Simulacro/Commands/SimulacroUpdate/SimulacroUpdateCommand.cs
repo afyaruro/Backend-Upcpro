@@ -11,13 +11,16 @@ namespace Application.Service.Simulacro.Commands.SimulacroUpdate
         public int NumeroPreguntas { get; set; }
         public DateTime FechaLimite { get; set; }
         public string Id { get; set; }
+        public string Type { get; set; }
 
-        public SimulacroUpdateInputCommand(int duracion, int numeroPreguntas, DateTime fechaLimite, string id)
+
+        public SimulacroUpdateInputCommand(int duracion, int numeroPreguntas, DateTime fechaLimite, string id, string type)
         {
             this.Duracion = duracion;
             this.NumeroPreguntas = numeroPreguntas;
             this.FechaLimite = fechaLimite;
             this.Id = id;
+            this.Type = type;
         }
     }
 }

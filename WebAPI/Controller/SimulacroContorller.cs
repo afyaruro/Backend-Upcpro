@@ -65,6 +65,10 @@ namespace WebAPI.Controllers
             {
                 return NotFound(new { success = false, message = ex.Message });
             }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
             catch (Exception)
             {
                 return InternalServerError();
@@ -181,6 +185,11 @@ namespace WebAPI.Controllers
             catch (ValidationException ex)
             {
                 return HandleValidationException(ex);
+            }
+            
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
             }
 
             catch (Exception)

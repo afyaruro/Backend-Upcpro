@@ -75,39 +75,96 @@ namespace Infrastructure.Adapters.Simulacro
         }
 
 
-
-
-
         public async Task<List<string>> GenerateQuestionCompetence(int numeroPreguntasByCompetence, string idCompetence)
         {
-            var filterQuestions = Builders<QuestionEntity>.Filter.Eq(q => q.IdCompetence, idCompetence);
-            long totalQuestions = await _collectionQuestion.CountDocumentsAsync(filterQuestions);
+            // 1. Obtener todas las preguntas de la competencia
+            var filterCompetence = Builders<QuestionEntity>.Filter.Eq(q => q.IdCompetence, idCompetence);
+            var allQuestions = await _collectionQuestion.Find(filterCompetence).ToListAsync();
 
-            if (totalQuestions == 0)
+            // Si no hay preguntas, retornamos una lista vacía
+            if (allQuestions == null || allQuestions.Count == 0)
             {
-                return [];
+                return new List<string>();
             }
 
-            var pipeline = new BsonDocument[]
-            {
-        new BsonDocument("$match", new BsonDocument("idCompetence", idCompetence)),
-        new BsonDocument("$sample", new BsonDocument("size", numeroPreguntasByCompetence)),
-        new BsonDocument("$project", new BsonDocument("_id", 1)) // Solo proyectar el ID
-            };
+            // 2. Conjunto para llevar el control de las preguntas ya seleccionadas (suponiendo que 'Id' identifica a cada pregunta)
+            HashSet<string> selectedQuestionIds = new HashSet<string>();
 
-            var questionIds = new List<string>();
-            var cursor = await _collectionQuestion.AggregateAsync<BsonDocument>(pipeline);
+            // Inicializamos el random afuera del ciclo para no reinicializar la semilla en cada iteración
+            Random rnd = new Random();
 
-            await cursor.ForEachAsync(doc =>
+            // 3. Iterar mientras no se complete el número requerido y existan preguntas por seleccionar
+            while (selectedQuestionIds.Count < numeroPreguntasByCompetence &&
+                   allQuestions.Any(q => !selectedQuestionIds.Contains(q.Id)))
             {
-                if (doc.Contains("_id"))
+                // Obtener las preguntas que aún no han sido seleccionadas
+                var availableQuestions = allQuestions.Where(q => !selectedQuestionIds.Contains(q.Id)).ToList();
+
+                // Seleccionar una pregunta aleatoria de las disponibles
+                var randomQuestion = availableQuestions[rnd.Next(availableQuestions.Count)];
+
+                // Filtrar todas las preguntas relacionadas por el mismo IdInfoQuestion
+                var relatedQuestions = allQuestions
+                                       .Where(q => q.IdInfoQuestion == randomQuestion.IdInfoQuestion &&
+                                                   !selectedQuestionIds.Contains(q.Id))
+                                       .ToList();
+
+                // Agregar las preguntas relacionadas a la lista, respetando el límite
+                foreach (var question in relatedQuestions)
                 {
-                    questionIds.Add(doc["_id"].ToString()!);
+                    if (selectedQuestionIds.Count < numeroPreguntasByCompetence)
+                    {
+                        selectedQuestionIds.Add(question.Id);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
-            });
+            }
 
-            return questionIds;
+            // Si se requiriera aleatorizar el resultado final antes de retornarlo, se podría hacer:
+            var result = selectedQuestionIds
+                            .OrderBy(id => rnd.Next())
+                            .Take(numeroPreguntasByCompetence)
+                            .ToList();
+
+            return result;
         }
+
+
+
+
+        // public async Task<List<string>> GenerateQuestionCompetence(int numeroPreguntasByCompetence, string idCompetence)
+        // {
+        //     var filterQuestions = Builders<QuestionEntity>.Filter.Eq(q => q.IdCompetence, idCompetence);
+        //     long totalQuestions = await _collectionQuestion.CountDocumentsAsync(filterQuestions);
+
+        //     if (totalQuestions == 0)
+        //     {
+        //         return [];
+        //     }
+
+        //     var pipeline = new BsonDocument[]
+        //     {
+        // new BsonDocument("$match", new BsonDocument("idCompetence", idCompetence)),
+        // new BsonDocument("$sample", new BsonDocument("size", numeroPreguntasByCompetence)),
+        // new BsonDocument("$project", new BsonDocument("_id", 1)) // Solo proyectar el ID
+        //     };
+
+        //     var questionIds = new List<string>();
+        //     var cursor = await _collectionQuestion.AggregateAsync<BsonDocument>(pipeline);
+
+        //     await cursor.ForEachAsync(doc =>
+        //     {
+        //         if (doc.Contains("_id"))
+        //         {
+        //             questionIds.Add(doc["_id"].ToString()!);
+        //         }
+        //     });
+
+        //     return questionIds;
+        // }
 
         public bool ExistNumQuestion(int numQuestion, string idCompetence)
         {
@@ -122,6 +179,6 @@ namespace Infrastructure.Adapters.Simulacro
 
         }
 
-        
+
     }
 }
