@@ -18,10 +18,10 @@ namespace Application.Service.Certificado.Commands.CertificadoCreate
         public double Puntaje { get; set; }
         public string JsonQuestions { get; set; }
 
-        public CertificadoCreateInputCommand(string name)
-        {
-
+        public CertificadoCreateInputCommand() { 
+            
         }
+
 
         public CertificadoCreateInputCommand(string idSimulacro, int duracion, DateTime fecha, int numCorrectasCiudadanas, int numCorrectasIngles, int numCorrectasRazonamiento, int numCorrectasLectura, int totalCiudadanas, int totalLectura, int totalIngles, int totalRazonamiento, double puntaje, string jsonQuestions)
         {
