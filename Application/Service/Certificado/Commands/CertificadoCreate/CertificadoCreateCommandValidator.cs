@@ -30,23 +30,19 @@ namespace Application.Service.Certificado.Commands.CertificadoCreate
 
             RuleFor(_ => _.NumCorrectasCiudadanas)
                 .NotNull().WithMessage("El número de respuestas correctas en Ciudadanas no puede ser nulo")
-                .NotEmpty().WithMessage("El número de respuestas correctas en Ciudadanas es obligatorio")
-                .GreaterThanOrEqualTo(0).WithMessage("El número de respuestas correctas en Ciudadanas debe ser mayor o igual a cero");
+                .NotEmpty().WithMessage("El número de respuestas correctas en Ciudadanas es obligatorio");
 
             RuleFor(_ => _.NumCorrectasIngles)
                 .NotNull().WithMessage("El número de respuestas correctas en Inglés no puede ser nulo")
-                .NotEmpty().WithMessage("El número de respuestas correctas en Inglés es obligatorio")
-                .GreaterThanOrEqualTo(0).WithMessage("El número de respuestas correctas en Inglés debe ser mayor o igual a cero");
+                .NotEmpty().WithMessage("El número de respuestas correctas en Inglés es obligatorio");
 
             RuleFor(_ => _.NumCorrectasRazonamiento)
                 .NotNull().WithMessage("El número de respuestas correctas en Razonamiento no puede ser nulo")
-                .NotEmpty().WithMessage("El número de respuestas correctas en Razonamiento es obligatorio")
-                .GreaterThanOrEqualTo(0).WithMessage("El número de respuestas correctas en Razonamiento debe ser mayor o igual a cero");
+                .NotEmpty().WithMessage("El número de respuestas correctas en Razonamiento es obligatorio");
 
             RuleFor(_ => _.NumCorrectasLectura)
                 .NotNull().WithMessage("El número de respuestas correctas en Lectura no puede ser nulo")
-                .NotEmpty().WithMessage("El número de respuestas correctas en Lectura es obligatorio")
-                .GreaterThanOrEqualTo(0).WithMessage("El número de respuestas correctas en Lectura debe ser mayor o igual a cero");
+                .NotEmpty().WithMessage("El número de respuestas correctas en Lectura es obligatorio");
 
             RuleFor(_ => _.TotalLectura)
                     .NotNull().WithMessage("El total de preguntas de Lectura Critica no puede ser nulo")
