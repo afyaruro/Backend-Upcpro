@@ -27,6 +27,8 @@ namespace Domain.Entity
         public string TypeUser { get; set; }
         [BsonElement("idProgram")]
         public string IdProgram { get; set; }
+        [BsonElement("puntaje")]
+        public int Puntaje { get; set; }
 
         [BsonIgnore]
         public ProgramEntity Program { get; set; }
@@ -34,6 +36,7 @@ namespace Domain.Entity
         public UserEntity()
         {
             this.DateUpdate = DateTime.Now;
+            this.Puntaje = 0;
         }
 
     }

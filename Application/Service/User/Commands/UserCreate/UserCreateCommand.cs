@@ -15,6 +15,7 @@ namespace Application.Service.User.Commands.UserCreate
         public string Gender { get; set; }
         public string IdProgram { get; set; }
 
+
         public UserCreateInputCommand()
         {
         }
@@ -29,7 +30,7 @@ namespace Application.Service.User.Commands.UserCreate
             this.UserId = UserId;
         }
     }
- 
+
     public class UserCreateOutputCommand
     {
         public string Id { get; set; }
@@ -42,6 +43,8 @@ namespace Application.Service.User.Commands.UserCreate
         public string Gender { get; set; }
         public string TypeUser { get; set; }
         public ProgramEntity Program { get; set; }
+        public int Puntaje { get; set; }
+
 
         public UserCreateOutputCommand()
         {

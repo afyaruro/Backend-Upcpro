@@ -1,6 +1,7 @@
 
 using Domain.Base.ResponseEntity;
 using Domain.Entity;
+using Domain.Entity.RankingResponseEntity;
 
 namespace Domain.Port.User
 {
@@ -16,6 +17,10 @@ namespace Domain.Port.User
         Task<bool> UpdatePassword(string userId, string password);
         Task<bool> UpdateMail(string userId, string mail);
         Task<ResponseEntity<UserEntity>> GetAll(int page, int pageSize);
+        Task<bool> UpdatePuntaje(string userId, int puntaje);
+        Task<RankingResponseEntity<UserEntity>> GetRankingByScore(string userId);
+        
+
 
     }
 }

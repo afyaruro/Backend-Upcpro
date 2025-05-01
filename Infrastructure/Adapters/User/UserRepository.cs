@@ -3,6 +3,7 @@ using Domain.Base.ResponseEntity;
 using Domain.Entity;
 using Domain.Entity.Facultad;
 using Domain.Entity.Program;
+using Domain.Entity.RankingResponseEntity;
 using Domain.Port.User;
 using Infrastructure.Context.MongoDB;
 using MongoDB.Driver;
@@ -164,6 +165,48 @@ namespace Infrastructure.Adapters.User
             return result.ModifiedCount > 0;
         }
 
+        public async Task<bool> UpdatePuntaje(string userId, int puntaje)
+        {
+            var update = Builders<UserEntity>.Update.Set(u => u.Puntaje, puntaje);
+            var result = await _collection.UpdateOneAsync(u => u.Id == userId, update);
+            return result.ModifiedCount > 0;
+        }
 
+        public async Task<RankingResponseEntity<UserEntity>> GetRankingByScore(string userId)
+        {
+            var topUsers = await _collection.Find(_ => true)
+                .SortByDescending(u => u.Puntaje)
+                .Limit(3)
+                .ToListAsync();
+
+            foreach (var user in topUsers)
+            {
+                user.Program = await _collectionProgram
+                    .Find(p => p.Id == user.IdProgram)
+                    .FirstOrDefaultAsync();
+
+                if (user.Program != null)
+                {
+                    user.Program.Faculty = await _collectionFaculty
+                        .Find(f => f.Id == user.Program.IdFaculty)
+                        .FirstOrDefaultAsync();
+                }
+            }
+
+
+            int userPosition = 0;
+            var userPositionCursor = _collection.Find(_ => true)
+                .SortByDescending(u => u.Puntaje);
+
+            var allUsers = await userPositionCursor.ToListAsync();
+            userPosition = allUsers.FindIndex(u => u.Id == userId) + 1;
+
+
+            return new RankingResponseEntity<UserEntity>
+            {
+                Top = topUsers,
+                CurrentUserPosition = userPosition,
+            };
+        }
     }
 }

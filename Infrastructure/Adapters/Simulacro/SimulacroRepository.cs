@@ -17,7 +17,7 @@ namespace Infrastructure.Adapters.Simulacro
 
         public SimulacroRepository(MongoDBContext context)
         {
-            _collection = context._dbs.GetCollection<SimulacroEntity>("Simlacro");
+            _collection = context._dbs.GetCollection<SimulacroEntity>("Simulacrum");
             _collectionQuestion = context._dbs.GetCollection<QuestionEntity>("Question");
 
         }

@@ -52,6 +52,7 @@ namespace Application.Service.User.Commands.UserCreate
             command.TypeUser = user.TypeUser;
             command.Gender = user.Gender;
             command.Id = user.Id;
+            command.Puntaje = user.Puntaje;
 
             return command;
 

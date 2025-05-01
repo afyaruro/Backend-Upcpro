@@ -16,6 +16,10 @@ namespace Application.Service.User.Commands.UserUpdate
         }
     }
 
+
+
+
+
     public class UserPasswordForAdminUpdateInputCommand : UserPasswordUpdateInputCommand
     {
         public string Id { get; set; }

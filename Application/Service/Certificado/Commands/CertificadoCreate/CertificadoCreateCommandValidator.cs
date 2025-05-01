@@ -22,31 +22,6 @@ namespace Application.Service.Certificado.Commands.CertificadoCreate
                 .NotNull().WithMessage("La fecha no puede ser nula")
                 .NotEmpty().WithMessage("La fecha es obligatoria");
 
-            RuleFor(_ => _.TotalLectura)
-                   .NotNull().WithMessage("El total de preguntas de Lectura Critica no puede ser nulo")
-                   .NotEmpty().WithMessage("El total de preguntas de Lectura Critica es obligatorio");
-
-
-            RuleFor(_ => _.TotalCiudadanas)
-                           .NotNull().WithMessage("El total de preguntas de Competencias Ciudadanas no puede ser nulo")
-                           .NotEmpty().WithMessage("El total de preguntas de Competencias Ciudadanas es obligatorio")
-                           .GreaterThanOrEqualTo(0).WithMessage("El total de preguntas de Competencias Ciudadanas debe ser mayor o igual a cero");
-
-            RuleFor(_ => _.TotalIngles)
-                           .NotNull().WithMessage("El total de preguntas de Ingles no puede ser nulo")
-                           .NotEmpty().WithMessage("El total de preguntas de Ingles es obligatorio")
-                           .GreaterThanOrEqualTo(0).WithMessage("El total de preguntas de Ingles debe ser mayor o igual a cero");
-
-            RuleFor(_ => _.TotalRazonamiento)
-                           .NotNull().WithMessage("El total de preguntas de Razonamiento Cuantitativo no puede ser nulo")
-                           .NotEmpty().WithMessage("El total de preguntas de Razonamiento Cuantitativo es obligatorio")
-                           .GreaterThanOrEqualTo(0).WithMessage("El total de preguntas de Razonamiento Cuantitativo debe ser mayor o igual a cero");
-
-            RuleFor(_ => _.Puntaje)
-                           .NotNull().WithMessage("El puntaje no puede ser nulo")
-                           .NotEmpty().WithMessage("El puntaje es obligatorio")
-                           .GreaterThanOrEqualTo(0).WithMessage("El puntaje debe ser mayor o igual a cero");
-
             RuleFor(_ => _.JsonQuestions)
                             .NotNull().WithMessage("Las preguntas en formato json no puedes ser nulo")
                             .NotEmpty().WithMessage("Las preguntas en formato json son obligatorias");

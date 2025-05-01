@@ -10,11 +10,11 @@ namespace Application.Service.User.Commands.UserUpdate
 {
     public class UserPasswordUpdateCommandHandler
     {
-        private readonly IUserRepository _UserRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserPasswordUpdateCommandHandler(IUserRepository UserRepository)
+        public UserPasswordUpdateCommandHandler(IUserRepository userRepository)
         {
-            this._UserRepository = UserRepository;
+            this._userRepository = userRepository;
         }
 
         public async Task<bool> HandleAsync(UserPasswordUpdateInputCommand command, string userId)
@@ -33,7 +33,7 @@ namespace Application.Service.User.Commands.UserUpdate
                 throw new EntityNotFoundException("El user Id no es valido");
             }
 
-            var existUser = await _UserRepository.GetById(userId);
+            var existUser = await _userRepository.GetById(userId);
 
             if (existUser == null)
             {
@@ -43,7 +43,7 @@ namespace Application.Service.User.Commands.UserUpdate
             var helper = new PasswordEncryptionHelper();
             command.Password = helper.HashPassword(command.Password, existUser.Mail);
 
-            return await this._UserRepository.UpdatePassword(userId, command.Password);
+            return await this._userRepository.UpdatePassword(userId, command.Password);
         }
 
 

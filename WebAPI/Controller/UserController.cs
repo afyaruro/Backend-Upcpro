@@ -193,6 +193,110 @@ namespace WebAPI.Controller
             }
         }
 
+        [HttpPut("update-password-byte-mail")]
+        public async Task<IActionResult> UpdatePasswordByMail([FromBody] UserPasswordByMailUpdateInputCommand dto)
+        {
+
+            try
+            {
+                var response = await _userService.UpdatePasswordByMail(dto);
+                if (!response)
+                {
+                    return BadRequest(new { success = false, message = "No se actualizo la contraseña del usuario" });
+                }
+
+                return Ok(new { success = true, message = "La contraseña se ha actualizado exitosamente" });
+            }
+
+            catch (EntityExistException ex)
+            {
+                return Conflict(new { success = false, message = ex.Message });
+            }
+
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+
+            catch (ValidationException ex)
+            {
+                return HandleValidationException(ex);
+            }
+
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        [Authorize]
+        [HttpPut("update-puntaje")]
+        public async Task<IActionResult> UpdatePuntaje([FromBody] UserPuntajeUpdateInputCommand dto)
+        {
+
+            try
+            {
+                var userId = HttpContext.User.FindFirst("uid")?.Value;
+                var resp = await CheckAccessAll(userId!, _userService);
+                if (resp != null)
+                {
+                    return resp;
+                }
+
+                var response = await _userService.UpdatePuntaje(dto, userId!);
+                if (!response)
+                {
+                    return BadRequest(new { success = false, message = "No se actualizo la contraseña del usuario" });
+                }
+
+                return Ok(new { success = true, message = "La contraseña se ha actualizado exitosamente" });
+            }
+
+            catch (EntityExistException ex)
+            {
+                return Conflict(new { success = false, message = ex.Message });
+            }
+
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+
+            catch (ValidationException ex)
+            {
+                return HandleValidationException(ex);
+            }
+
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+        [HttpPost("get-ranking")]
+        public async Task<IActionResult> GetRanking()
+        {
+            try
+            {
+                var userId = HttpContext.User.FindFirst("uid")?.Value;
+                var resp = await CheckAccess(userId: userId!, userService: _userService, "student");
+                if (resp != null)
+                {
+                    return resp;
+                }
+
+                var response = await _userService.GetRanking(userId!);
+
+                return Ok(new { success = true, message = "Ranking Obtenido", ranking = response });
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+
 
 
     }

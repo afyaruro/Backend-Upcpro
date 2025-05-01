@@ -15,7 +15,7 @@ namespace Application.Service.Certificado.Commands.CertificadoCreate
             this._certificadoRepository = certificadoRepository;
         }
 
-        public async Task<bool> HandleAsync(CertificadoCreateInputCommand command, string idUser)
+        public async Task<bool> HandleAsync(CertificadoCreateInputCommand command, string idUser, string typeResult)
         {
 
             var validator = new CertificadoCreateCommandValidator();
@@ -33,6 +33,7 @@ namespace Application.Service.Certificado.Commands.CertificadoCreate
 
 
             return await _certificadoRepository.CrearAsync(new SimulacroResultEntity(
+                type: typeResult,
                 idSimulacro: command.IdSimulacro,
                 idEstudiante: idUser,
                 duracion: command.Duracion,
@@ -47,6 +48,7 @@ namespace Application.Service.Certificado.Commands.CertificadoCreate
                 totalLectura: command.TotalLectura,
                 puntaje: command.Puntaje,
                 jsonQuestions: command.JsonQuestions
+
             ));
         }
     }
