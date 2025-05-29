@@ -17,18 +17,6 @@ namespace Infrastructure.Adapters.InfoQuestion
 
         }
 
-        public async Task<InfoQuestionEntity> Add(InfoQuestionEntity entity)
-        {
-            await _collection.InsertOneAsync(entity);
-            return entity;
-        }
-
-        public async Task<bool> Delete(string id)
-        {
-            var result = await _collection.DeleteOneAsync(c => c.Id == id);
-            return result.DeletedCount > 0;
-        }
-
         public async Task<bool> ExistById(string id)
         {
             return await _collection.Find(c => c.Id == id).AnyAsync();
@@ -74,12 +62,6 @@ namespace Infrastructure.Adapters.InfoQuestion
         public async Task<InfoQuestionEntity?> GetById(string id)
         {
             return await _collection.Find(c => c.Id == id).FirstOrDefaultAsync();
-        }
-
-        public async Task<bool> Update(InfoQuestionEntity entity)
-        {
-            var result = await _collection.ReplaceOneAsync(c => c.Id == entity.Id, entity);
-            return result.ModifiedCount > 0;
         }
 
 

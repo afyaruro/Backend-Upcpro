@@ -18,17 +18,7 @@ namespace Infrastructure.Adapters.Competence
 
         }
 
-        public async Task<CompetenceEntity> Add(CompetenceEntity entity)
-        {
-            await _collection.InsertOneAsync(entity);
-            return entity;
-        }
 
-        public async Task<bool> Delete(string id)
-        {
-            var result = await _collection.DeleteOneAsync(c => c.Id == id);
-            return result.DeletedCount > 0;
-        }
 
         public async Task<bool> ExistById(string id)
         {
@@ -37,7 +27,7 @@ namespace Infrastructure.Adapters.Competence
 
         public async Task<CompetenceEntity> ExistByName(string name)
         {
-            return await _collection.Find(c => c.Name== name).FirstOrDefaultAsync();
+            return await _collection.Find(c => c.Name == name).FirstOrDefaultAsync();
         }
 
         public async Task<ResponseEntity<CompetenceEntity>> GetAll(int page, int pageSize)
@@ -65,11 +55,11 @@ namespace Infrastructure.Adapters.Competence
                 if (competencias == null || !competencias.Any())
                 {
                     return new ResponseEntity<CompetenceEntity>($"No se encontraron competencias actualizadas desde {lastSyncDate}", false);
-                    
+
                 }
 
                 return new ResponseEntity<CompetenceEntity>($"Se encontraron {competencias.Count} competencias actualizadas desde {lastSyncDate}", competencias);
-                
+
             }
             catch (Exception ex)
             {
@@ -77,10 +67,6 @@ namespace Infrastructure.Adapters.Competence
             }
         }
 
-        public async Task<bool> Update(CompetenceEntity entity)
-        {
-            var result = await _collection.ReplaceOneAsync(c => c.Id == entity.Id, entity);
-            return result.MatchedCount > 0;
-        }
+
     }
 }

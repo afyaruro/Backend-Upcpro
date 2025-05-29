@@ -176,23 +176,8 @@ namespace Infrastructure.Adapters.User
         {
             var topUsers = await _collection.Find(_ => true)
                 .SortByDescending(u => u.Puntaje)
-                .Limit(3)
+                .Limit(10)
                 .ToListAsync();
-
-            foreach (var user in topUsers)
-            {
-                user.Program = await _collectionProgram
-                    .Find(p => p.Id == user.IdProgram)
-                    .FirstOrDefaultAsync();
-
-                if (user.Program != null)
-                {
-                    user.Program.Faculty = await _collectionFaculty
-                        .Find(f => f.Id == user.Program.IdFaculty)
-                        .FirstOrDefaultAsync();
-                }
-            }
-
 
             int userPosition = 0;
             var userPositionCursor = _collection.Find(_ => true)

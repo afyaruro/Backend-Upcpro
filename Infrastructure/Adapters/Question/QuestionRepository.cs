@@ -18,19 +18,7 @@ namespace Infrastructure.Adapters.Question
 
         }
 
-        public async Task<QuestionEntity> Add(QuestionEntity entity)
-        {
-            await _collection.InsertOneAsync(entity);
 
-            return entity;
-        }
-
-
-        public async Task<bool> Delete(string id)
-        {
-            var result = await _collection.DeleteOneAsync(c => c.Id == id);
-            return result.DeletedCount > 0;
-        }
 
         public async Task<bool> ExistById(string id)
         {
@@ -62,11 +50,11 @@ namespace Infrastructure.Adapters.Question
                 if (preguntas == null || !preguntas.Any())
                 {
                     return new ResponseEntity<QuestionEntity>($"No se encontraron preguntas actualizadas desde {lastSyncDate}", false);
-                    
+
                 }
 
                 return new ResponseEntity<QuestionEntity>($"Se encontraron {preguntas.Count} preguntas actualizadas desde {lastSyncDate}", preguntas);
-                
+
             }
             catch (Exception ex)
             {
@@ -79,11 +67,6 @@ namespace Infrastructure.Adapters.Question
             return await _collection.Find(c => c.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> Update(QuestionEntity entity)
-        {
-            var result = await _collection.ReplaceOneAsync(c => c.Id == entity.Id, entity);
-            return result.ModifiedCount > 0;
-        }
 
     }
 }

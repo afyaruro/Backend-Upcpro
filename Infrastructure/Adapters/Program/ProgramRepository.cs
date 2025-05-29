@@ -21,27 +21,12 @@ namespace Infrastructure.Adapters.Program
 
         }
 
-        public async Task<ProgramEntity> Add(ProgramEntity entity)
-        {
-            await _collection.InsertOneAsync(entity);
-
-            entity.Faculty = await _collectionFaculty
-                          .Find(f => f.Id == entity.IdFaculty)
-                          .FirstOrDefaultAsync();
-
-            return entity;
-        }
 
         public async Task<ProgramEntity> ByName(string name)
         {
             return await _collection.Find(c => c.Name == name).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> Delete(string id)
-        {
-            var result = await _collection.DeleteOneAsync(c => c.Id == id);
-            return result.DeletedCount > 0;
-        }
 
         public async Task<bool> ExistById(string id)
         {
@@ -88,11 +73,11 @@ namespace Infrastructure.Adapters.Program
                 if (programas == null || !programas.Any())
                 {
                     return new ResponseEntity<ProgramEntity>($"No se encontraron programas actualizados desde {lastSyncDate}", false);
-                    
+
                 }
 
                 return new ResponseEntity<ProgramEntity>($"Se encontraron {programas.Count} programas actualizados desde {lastSyncDate}", programas);
-                
+
             }
             catch (Exception ex)
             {
@@ -100,10 +85,6 @@ namespace Infrastructure.Adapters.Program
             }
         }
 
-        public async Task<bool> Update(ProgramEntity entity)
-        {
-            var result = await _collection.ReplaceOneAsync(c => c.Id == entity.Id, entity);
-            return result.MatchedCount > 0;
-        }
+
     }
 }

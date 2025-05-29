@@ -1,8 +1,5 @@
 using Application.Service.Simulacro.Commands.GenerarSimulacro;
-using Application.Service.Simulacro.Commands.SimulacroCreate;
-using Application.Service.Simulacro.Commands.SimulacroDelete;
 using Application.Service.Simulacro.Commands.SimulacroGet;
-using Application.Service.Simulacro.Commands.SimulacroUpdate;
 using Domain.Base.ResponseEntity;
 using Domain.Entity.Simulacros;
 using Domain.Port.Competence;
@@ -21,11 +18,7 @@ namespace Application.Service.Simulacro
             this._competenceRepository = competenceRepository;
         }
 
-        public async Task<SimulacroCreateOutputCommand> Create(SimulacroCreateInputCommand command)
-        {
-            var _create = new SimulacroCreateCommandHandler(_repository);
-            return await _create.HandleAsync(command);
-        }
+
 
         public async Task<ResponseEntity<SimulacroEntity>> GetAllActive(SimulacroGetInputCommand command)
         {
@@ -33,11 +26,6 @@ namespace Application.Service.Simulacro
             return await _getAll.HandleAsync(command);
         }
 
-        public async Task<bool> Update(SimulacroUpdateInputCommand command)
-        {
-            var _update = new SimulacroUpdateCommandHandler(_repository);
-            return await _update.HandleAsync(command);
-        }
 
         public async Task<List<string>> GenerarSimulacro(GenerarSimulacroInputCommand command)
         {
@@ -45,11 +33,7 @@ namespace Application.Service.Simulacro
             return await _generar.HandleAsync(command);
         }
 
-        public async Task<bool> Delete(SimulacroDeleteInputCommand command)
-        {
-            var _delete = new SimulacroDeleteCommandHandler(_repository);
-            return await _delete.HandleAsync(command);
-        }
+
 
 
     }

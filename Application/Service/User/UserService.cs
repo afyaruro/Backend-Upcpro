@@ -3,6 +3,7 @@ using Application.Service.User.Commands.UserCreate;
 using Application.Service.User.Commands.UserGetAllPage;
 using Application.Service.User.Commands.UserLogin;
 using Application.Service.User.Commands.UserUpdate;
+using Application.Service.User.Queries.ExistByMail;
 using Domain.Base.ResponseEntity;
 using Domain.Entity;
 using Domain.Entity.RankingResponseEntity;
@@ -57,11 +58,11 @@ namespace Application.Service.User
             return await _update.HandleAsync(command, userId);
         }
 
-        public async Task<bool> UpdatePasswordForAdmin(UserPasswordForAdminUpdateInputCommand command)
-        {
-            var _update = new UserPasswordUpdateCommandHandler(_repository);
-            return await _update.HandleAsync(command, command.Id);
-        }
+        // public async Task<bool> UpdatePasswordForAdmin(UserPasswordForAdminUpdateInputCommand command)
+        // {
+        //     var _update = new UserPasswordUpdateCommandHandler(_repository);
+        //     return await _update.HandleAsync(command, command.Id);
+        // }
 
         public async Task<bool> UpdatePassword(UserPasswordUpdateInputCommand command, string userId)
         {
@@ -103,6 +104,13 @@ namespace Application.Service.User
         {
             var _getAll = new UserRankingGetCommandHandler(_repository);
             return await _getAll.HandleAsync(idUser);
+        }
+
+        public async Task<bool> ExistByMail(string mail)
+        {
+            mail = mail.ToUpper();
+            var _getAll = new CompetenceExistByMail(_repository);
+            return await _getAll.QueryAsync(mail);
         }
 
 

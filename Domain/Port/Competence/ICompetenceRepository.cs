@@ -11,9 +11,6 @@ namespace Domain.Port.Competence
     {
         Task<bool> ExistById(string id);
         Task<CompetenceEntity> ExistByName(string name);
-        Task<CompetenceEntity> Add(CompetenceEntity entity);
-        Task<bool> Update(CompetenceEntity entity);
-        Task<bool> Delete(string id);
         Task<ResponseEntity<CompetenceEntity>> GetAll(int page, int size);
         Task<ResponseEntity<CompetenceEntity>> GetAll(DateTime lastSyncDate);
 

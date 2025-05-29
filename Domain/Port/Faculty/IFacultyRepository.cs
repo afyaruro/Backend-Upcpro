@@ -8,9 +8,6 @@ namespace Domain.Port.Faculty
     {
         Task<bool> ExistById(string id);
         Task<bool> ExistByName(string name);
-        Task<FacultyEntity> Add(FacultyEntity entity);
-        Task<bool> Update(FacultyEntity entity);
-        Task<bool> Delete(string id);
         Task<ResponseEntity<FacultyEntity>> GetAll(int page, int size);
         Task<ResponseEntity<FacultyEntity>> GetAll(DateTime lastSyncDate);
 

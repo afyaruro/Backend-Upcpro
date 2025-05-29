@@ -9,14 +9,17 @@ namespace Domain.Entity.Facultad
         [BsonElement("name")]
         public string Name { get; set; }
 
+        [BsonElement("espacioFisicoId")]
+        public string SedeId { get; set; }
+
         public FacultyEntity()
         {
 
         }
 
-        public FacultyEntity(string name)
+        public FacultyEntity(string name, string sedeId)
         {
-
+            this.SedeId = sedeId;
             this.Name = name;
             this.DateUpdate = DateTime.Now;
         }

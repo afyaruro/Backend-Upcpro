@@ -22,30 +22,7 @@ namespace Infrastructure.Adapters.Simulacro
 
         }
 
-        public async Task<SimulacroEntity> CrearAsync(SimulacroEntity simulacro)
-        {
-            await _collection.InsertOneAsync(simulacro);
-            return simulacro;
-        }
 
-        public async Task<bool> ActualizarAsync(SimulacroEntity simulacro)
-        {
-
-            var updateResult = await _collection.ReplaceOneAsync(
-                filter: doc => doc.Id == simulacro.Id,
-                replacement: simulacro);
-
-            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
-
-        }
-
-        public async Task<bool> EliminarAsync(string id)
-        {
-
-            var deleteResult = await _collection.DeleteOneAsync(doc => doc.Id == id);
-            return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
-
-        }
 
         public async Task<ResponseEntity<SimulacroEntity>> GetSimulacrosAsync(DateTime fechaActual)
         {
@@ -75,6 +52,64 @@ namespace Infrastructure.Adapters.Simulacro
         }
 
 
+        // public async Task<List<string>> GenerateQuestionCompetence(int numeroPreguntasByCompetence, string idCompetence)
+        // {
+        //     // 1. Obtener todas las preguntas de la competencia
+        //     var filterCompetence = Builders<QuestionEntity>.Filter.Eq(q => q.IdCompetence, idCompetence);
+        //     var allQuestions = await _collectionQuestion.Find(filterCompetence).ToListAsync();
+
+        //     // Si no hay preguntas, retornamos una lista vacía
+        //     if (allQuestions == null || allQuestions.Count == 0)
+        //     {
+        //         return new List<string>();
+        //     }
+
+        //     // 2. Conjunto para llevar el control de las preguntas ya seleccionadas (suponiendo que 'Id' identifica a cada pregunta)
+        //     HashSet<string> selectedQuestionIds = new HashSet<string>();
+
+        //     // Inicializamos el random afuera del ciclo para no reinicializar la semilla en cada iteración
+        //     Random rnd = new Random();
+
+        //     // 3. Iterar mientras no se complete el número requerido y existan preguntas por seleccionar
+        //     while (selectedQuestionIds.Count < numeroPreguntasByCompetence &&
+        //            allQuestions.Any(q => !selectedQuestionIds.Contains(q.Id)))
+        //     {
+        //         // Obtener las preguntas que aún no han sido seleccionadas
+        //         var availableQuestions = allQuestions.Where(q => !selectedQuestionIds.Contains(q.Id)).ToList();
+
+        //         // Seleccionar una pregunta aleatoria de las disponibles
+        //         var randomQuestion = availableQuestions[rnd.Next(availableQuestions.Count)];
+
+        //         // Filtrar todas las preguntas relacionadas por el mismo IdInfoQuestion
+        //         var relatedQuestions = allQuestions
+        //                                .Where(q => q.IdInfoQuestion == randomQuestion.IdInfoQuestion &&
+        //                                            !selectedQuestionIds.Contains(q.Id))
+        //                                .ToList();
+
+        //         // Agregar las preguntas relacionadas a la lista, respetando el límite
+        //         foreach (var question in relatedQuestions)
+        //         {
+        //             if (selectedQuestionIds.Count < numeroPreguntasByCompetence)
+        //             {
+        //                 selectedQuestionIds.Add(question.Id);
+        //             }
+        //             else
+        //             {
+        //                 break;
+        //             }
+        //         }
+        //     }
+
+        //     // Si se requiriera aleatorizar el resultado final antes de retornarlo, se podría hacer:
+        //     var result = selectedQuestionIds
+        //                     .OrderBy(id => rnd.Next())
+        //                     .Take(numeroPreguntasByCompetence)
+        //                     .ToList();
+
+        //     return result;
+        // }
+
+
         public async Task<List<string>> GenerateQuestionCompetence(int numeroPreguntasByCompetence, string idCompetence)
         {
             // 1. Obtener todas las preguntas de la competencia
@@ -87,84 +122,51 @@ namespace Infrastructure.Adapters.Simulacro
                 return new List<string>();
             }
 
-            // 2. Conjunto para llevar el control de las preguntas ya seleccionadas (suponiendo que 'Id' identifica a cada pregunta)
-            HashSet<string> selectedQuestionIds = new HashSet<string>();
-
-            // Inicializamos el random afuera del ciclo para no reinicializar la semilla en cada iteración
-            Random rnd = new Random();
-
-            // 3. Iterar mientras no se complete el número requerido y existan preguntas por seleccionar
-            while (selectedQuestionIds.Count < numeroPreguntasByCompetence &&
-                   allQuestions.Any(q => !selectedQuestionIds.Contains(q.Id)))
-            {
-                // Obtener las preguntas que aún no han sido seleccionadas
-                var availableQuestions = allQuestions.Where(q => !selectedQuestionIds.Contains(q.Id)).ToList();
-
-                // Seleccionar una pregunta aleatoria de las disponibles
-                var randomQuestion = availableQuestions[rnd.Next(availableQuestions.Count)];
-
-                // Filtrar todas las preguntas relacionadas por el mismo IdInfoQuestion
-                var relatedQuestions = allQuestions
-                                       .Where(q => q.IdInfoQuestion == randomQuestion.IdInfoQuestion &&
-                                                   !selectedQuestionIds.Contains(q.Id))
-                                       .ToList();
-
-                // Agregar las preguntas relacionadas a la lista, respetando el límite
-                foreach (var question in relatedQuestions)
+            // 2. Agrupar preguntas por IdInfoQuestion y ordenar dentro de cada grupo
+            var questionGroups = allQuestions
+                .GroupBy(q => q.IdInfoQuestion)
+                .Select(group => new
                 {
-                    if (selectedQuestionIds.Count < numeroPreguntasByCompetence)
+                    Questions = group.OrderBy(q => q.DateUpdate).ThenBy(q => q.Id).ToList(),
+                    GroupId = group.Key
+                })
+                .ToList();
+
+            // 3. Aleatorizar el orden de los grupos
+            var random = new Random();
+            var shuffledGroups = questionGroups.OrderBy(g => random.Next()).ToList();
+
+            // 4. Seleccionar preguntas manteniendo el orden dentro de cada grupo
+            var selectedQuestions = new List<string>();
+
+            foreach (var group in shuffledGroups)
+            {
+                foreach (var question in group.Questions)
+                {
+                    if (selectedQuestions.Count < numeroPreguntasByCompetence)
                     {
-                        selectedQuestionIds.Add(question.Id);
+                        selectedQuestions.Add(question.Id);
                     }
                     else
                     {
                         break;
                     }
                 }
+
+                if (selectedQuestions.Count >= numeroPreguntasByCompetence)
+                {
+                    break;
+                }
             }
 
-            // Si se requiriera aleatorizar el resultado final antes de retornarlo, se podría hacer:
-            var result = selectedQuestionIds
-                            .OrderBy(id => rnd.Next())
-                            .Take(numeroPreguntasByCompetence)
-                            .ToList();
+            // 5. Si quieres que el resultado final esté completamente aleatorizado
+            // return selectedQuestions.OrderBy(id => random.Next()).ToList();
 
-            return result;
+            // Retornar manteniendo el orden de grupos (aleatorio) pero orden interno preservado
+            return selectedQuestions.Take(numeroPreguntasByCompetence).ToList();
         }
 
 
-
-
-        // public async Task<List<string>> GenerateQuestionCompetence(int numeroPreguntasByCompetence, string idCompetence)
-        // {
-        //     var filterQuestions = Builders<QuestionEntity>.Filter.Eq(q => q.IdCompetence, idCompetence);
-        //     long totalQuestions = await _collectionQuestion.CountDocumentsAsync(filterQuestions);
-
-        //     if (totalQuestions == 0)
-        //     {
-        //         return [];
-        //     }
-
-        //     var pipeline = new BsonDocument[]
-        //     {
-        // new BsonDocument("$match", new BsonDocument("idCompetence", idCompetence)),
-        // new BsonDocument("$sample", new BsonDocument("size", numeroPreguntasByCompetence)),
-        // new BsonDocument("$project", new BsonDocument("_id", 1)) // Solo proyectar el ID
-        //     };
-
-        //     var questionIds = new List<string>();
-        //     var cursor = await _collectionQuestion.AggregateAsync<BsonDocument>(pipeline);
-
-        //     await cursor.ForEachAsync(doc =>
-        //     {
-        //         if (doc.Contains("_id"))
-        //         {
-        //             questionIds.Add(doc["_id"].ToString()!);
-        //         }
-        //     });
-
-        //     return questionIds;
-        // }
 
         public bool ExistNumQuestion(int numQuestion, string idCompetence)
         {

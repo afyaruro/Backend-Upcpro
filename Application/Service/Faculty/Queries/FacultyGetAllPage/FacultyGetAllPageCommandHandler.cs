@@ -39,7 +39,7 @@ namespace Application.Service.Faculty.Commands.FacultyGetAllPage
             responseCommands.listEntity = new List<FacultyGetAllPageOutputCommand>();
             foreach (var entity in resp.listEntity!)
             {
-                var command = new FacultyGetAllPageOutputCommand(name: entity.Name, id: entity.Id, dateUpdate: entity.DateUpdate);
+                var command = new FacultyGetAllPageOutputCommand(name: entity.Name, id: entity.Id, dateUpdate: entity.DateUpdate, espacioFisicoId: entity.SedeId);
                 responseCommands.listEntity.Add(command);
             }
 

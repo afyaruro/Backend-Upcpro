@@ -16,18 +16,6 @@ namespace Infrastructure.Adapters.Faculty
 
         }
 
-        public async Task<FacultyEntity> Add(FacultyEntity entity)
-        {
-            await _collection.InsertOneAsync(entity);
-            return entity;
-        }
-
-        public async Task<bool> Delete(string id)
-        {
-            var result = await _collection.DeleteOneAsync(c => c.Id == id);
-            return result.DeletedCount > 0;
-        }
-
         public async Task<bool> ExistById(string id)
         {
             return await _collection.Find(c => c.Id == id).AnyAsync();
@@ -75,10 +63,6 @@ namespace Infrastructure.Adapters.Faculty
             }
         }
 
-        public async Task<bool> Update(FacultyEntity entity)
-        {
-            var result = await _collection.ReplaceOneAsync(c => c.Id == entity.Id, entity);
-            return result.MatchedCount > 0;
-        }
+       
     }
 }
