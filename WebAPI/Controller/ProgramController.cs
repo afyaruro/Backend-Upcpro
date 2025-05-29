@@ -1,14 +1,8 @@
 
-using System.Net;
-using Application.Common.Exceptions;
 using Application.Service.Program;
-using Application.Service.Program.Commands.ProgramCreate;
-using Application.Service.Program.Commands.ProgramDelete;
 using Application.Service.Program.Commands.ProgramGetAllPage;
-using Application.Service.Program.Commands.ProgramUpdate;
 using Application.Service.User;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controller.Base;
 
@@ -29,46 +23,7 @@ namespace WebAPI.Controllers
             _userService = userService;
         }
 
-        [Authorize]
-        [HttpPost("created")]
-        public async Task<IActionResult> Create([FromBody] ProgramCreateInputCommand dto)
-        {
 
-            try
-            {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
-                if (resp != null)
-                {
-                    return resp;
-                }
-
-                var response = await _ProgramService.Create(dto);
-
-                if (response == null)
-                    return BadRequest();
-
-                return CreatedAtAction(nameof(Create), new { success = true, data = response, message = "Programa creado", });
-            }
-
-            catch (ValidationException ex)
-            {
-                return HandleValidationException(ex);
-            }
-            catch (EntityExistException ex)
-            {
-                return Conflict(new { success = false, message = ex.Message });
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new { success = false, message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-
-            }
-        }
 
         [HttpPost("get-all-sync")]
         public async Task<IActionResult> GetAllSync([FromBody] ProgramGetAllPageSyncInputCommand dto)
@@ -133,83 +88,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] ProgramUpdateInputCommand dto)
-        {
-            try
-            {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
-                if (resp != null)
-                {
-                    return resp;
-                }
 
-                var response = await _ProgramService.Update(dto);
-
-                if (!response)
-                {
-                    return BadRequest(new { success = false, message = "No se actualizo el programas" });
-                }
-
-                return Ok(new { success = true, message = "El programa se ha actualizado exitosamente" });
-            }
-            catch (EntityExistException ex)
-            {
-                return Conflict(new { success = false, message = ex.Message });
-            }
-
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new { success = false, message = ex.Message });
-            }
-
-            catch (ValidationException ex)
-            {
-                return HandleValidationException(ex);
-            }
-
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
-        }
-
-        [Authorize]
-        [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] ProgramDeleteInputCommand dto)
-        {
-            try
-            {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin");
-                if (resp != null)
-                {
-                    return resp;
-                }
-
-                var result = await _ProgramService.Delete(dto);
-                if (!result)
-                {
-                    return BadRequest(new { success = false, message = "No se elimino el programa" });
-                }
-                return Ok(new { success = result, message = "El programa se ha eliminado correctamente." });
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new { success = false, message = ex.Message });
-            }
-            catch (ValidationException ex)
-            {
-                return HandleValidationException(ex);
-            }
-            catch (Exception)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                                  new { success = false, message = "Ocurrió un error inesperado." });
-            }
-        }
     }
 
 }

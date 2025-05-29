@@ -4,6 +4,7 @@ using Application.Common.Exceptions;
 using Application.Jwt;
 using Application.Service.User;
 using Application.Service.User.Commands.UserCreate;
+using Application.Service.User.Commands.UserGetAllPage;
 using Application.Service.User.Commands.UserUpdate;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -193,7 +194,7 @@ namespace WebAPI.Controller
             }
         }
 
-        [HttpPut("update-password-byte-mail")]
+        [HttpPut("update-password-by-mail")]
         public async Task<IActionResult> UpdatePasswordByMail([FromBody] UserPasswordByMailUpdateInputCommand dto)
         {
 
@@ -221,6 +222,24 @@ namespace WebAPI.Controller
             catch (ValidationException ex)
             {
                 return HandleValidationException(ex);
+            }
+
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+        [HttpPost("exist-by-mail")]
+        public async Task<IActionResult> ExistByMail([FromBody] CompetenceExistByMailCommandInput dto)
+        {
+
+            try
+            {
+                var response = await _userService.ExistByMail(dto.Mail);
+
+                return Ok(new { exist = response });
             }
 
             catch (Exception)
@@ -274,7 +293,7 @@ namespace WebAPI.Controller
         }
 
 
-        [HttpPost("get-ranking")]
+        [HttpGet("get-ranking")]
         public async Task<IActionResult> GetRanking()
         {
             try

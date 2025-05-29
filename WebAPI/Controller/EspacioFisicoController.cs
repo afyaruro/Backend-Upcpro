@@ -1,6 +1,6 @@
 
-using Application.Service.InfoQuestion;
-using Application.Service.InfoQuestion.Commands.InfoQuestionGetAllPage;
+using Application.Service.EspacioFisico;
+using Application.Service.EspacioFisico.Commands.EspacioFisicoGetAllPage;
 using Application.Service.User;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -9,27 +9,26 @@ using WebAPI.Controller.Base;
 namespace WebAPI.Controller
 {
     [ApiController]
-    [Route("api/info-question")]
-    public class InfoQuestionController : ApiControllerBase
+    [Route("api/espacio-fisico")]
+    public class EspacioFisicoController : ApiControllerBase
     {
-
-        private readonly InfoQuestionService _InfoQuestionService;
+        private readonly EspacioFisicoService _EspacioFisicoService;
         private readonly UserService _userService;
 
-
-        public InfoQuestionController(InfoQuestionService service, UserService userService)
+        public EspacioFisicoController(EspacioFisicoService service, UserService userService)
         {
-            _InfoQuestionService = service;
+            _EspacioFisicoService = service;
             _userService = userService;
         }
 
+
         [HttpPost("get-all-sync")]
-        public async Task<IActionResult> GetAllSync([FromBody] InfoQuestionGetAllPageSyncInputCommand dto)
+        public async Task<IActionResult> GetAllSync([FromBody] EspacioFisicoGetAllPageSyncInputCommand dto)
         {
             try
             {
 
-                var response = await _InfoQuestionService.GetAllSync(dto);
+                var response = await _EspacioFisicoService.GetAllSync(dto);
 
                 if (response.isError)
                     return BadRequest(new { success = false, message = response.message });
@@ -61,13 +60,12 @@ namespace WebAPI.Controller
         }
 
         [HttpPost("get-all")]
-        public async Task<IActionResult> GetAll([FromBody] InfoQuestionGetAllPageInputCommand dto)
+        public async Task<IActionResult> GetAll([FromBody] EspacioFisicoGetAllPageInputCommand dto)
         {
             try
             {
 
-
-                var response = await _InfoQuestionService.GetAllPage(dto);
+                var response = await _EspacioFisicoService.GetAllPage(dto);
 
                 if (response.isError)
                     return BadRequest(new { success = false, message = response.message });
@@ -86,6 +84,7 @@ namespace WebAPI.Controller
                 return InternalServerError();
             }
         }
+
 
 
     }

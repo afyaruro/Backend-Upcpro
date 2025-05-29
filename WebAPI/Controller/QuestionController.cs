@@ -1,13 +1,8 @@
 
-using Application.Common.Exceptions;
 using Application.Service.Question;
-using Application.Service.Question.Commands.QuestionCreate;
-using Application.Service.Question.Commands.QuestionDelete;
 using Application.Service.Question.Commands.QuestionGetAllPage;
-using Application.Service.Question.Commands.QuestionUpdate;
 using Application.Service.User;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controller.Base;
 
@@ -26,46 +21,6 @@ namespace WebAPI.Controller
         {
             _QuestionService = service;
             _userService = userService;
-        }
-
-        [Authorize]
-        [HttpPost("created")]
-        public async Task<IActionResult> Create([FromBody] QuestionCreateInputCommand dto)
-        {
-
-            try
-            {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
-                if (resp != null)
-                {
-                    return resp;
-                }
-
-                var response = await _QuestionService.Create(dto);
-
-                if (response == null)
-                    return BadRequest();
-
-                return CreatedAtAction(nameof(Create), new { success = true, data = response, message = "pregunta creada", });
-            }
-
-            catch (ValidationException ex)
-            {
-                return HandleValidationException(ex);
-            }
-            catch (EntityExistException ex)
-            {
-                return Conflict(new { success = false, message = ex.Message });
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new { success = false, message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
         }
 
         [HttpPost("get-all")]
@@ -143,81 +98,6 @@ namespace WebAPI.Controller
             }
         }
 
-        [Authorize]
-        [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] QuestionUpdateInputCommand dto)
-        {
-            try
-            {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
-                if (resp != null)
-                {
-                    return resp;
-                }
-
-                var response = await _QuestionService.Update(dto);
-
-                if (!response)
-                {
-                    return BadRequest(new { success = false, message = "No se actualizo la pregunta" });
-                }
-
-                return Ok(new { success = true, message = "La pregunta se ha actualizado exitosamente" });
-            }
-            catch (EntityExistException ex)
-            {
-                return Conflict(new { success = false, message = ex.Message });
-            }
-
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new { success = false, message = ex.Message });
-            }
-
-            catch (ValidationException ex)
-            {
-                return HandleValidationException(ex);
-            }
-
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
-        }
-
-        [Authorize]
-        [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] QuestionDeleteInputCommand dto)
-        {
-            try
-            {
-                var userId = HttpContext.User.FindFirst("uid")?.Value;
-                var resp = await CheckAccess(userId: userId!, userService: _userService, "admin"); 
-                if (resp != null)
-                {
-                    return resp;
-                }
-
-                var result = await _QuestionService.Delete(dto);
-                if (!result)
-                {
-                    return BadRequest(new { success = false, message = "No se elimino la pregunta" });
-                }
-                return Ok(new { success = result, message = "La pregunta se ha eliminado correctamente." });
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new { success = false, message = ex.Message });
-            }
-            catch (ValidationException ex)
-            {
-                return HandleValidationException(ex);
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
-        }
+        
     }
 }
