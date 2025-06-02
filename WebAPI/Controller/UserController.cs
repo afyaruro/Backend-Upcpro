@@ -167,7 +167,7 @@ namespace WebAPI.Controller
                 var response = await _userService.UpdatePassword(dto, userId!);
                 if (!response)
                 {
-                    return BadRequest(new { success = false, message = "Contraseña actual incorrecta" });
+                    return Unauthorized(new { success = false, message = "Contraseña actual incorrecta" });
                 }
 
                 return Ok(new { success = true, message = "La contraseña se ha actualizado exitosamente" });
