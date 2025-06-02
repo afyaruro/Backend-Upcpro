@@ -42,6 +42,6 @@ admin
 
 
 
-docker build -t backend .
+docker build -t backend-app .
 
-docker run -d -p 8083:8081 --name backend-upcpro backend
+docker run -d -p 8083:8081 --name backend-upcpro-app backend-app
