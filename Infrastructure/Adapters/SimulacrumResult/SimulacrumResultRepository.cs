@@ -25,6 +25,8 @@ namespace Infrastructure.Adapters.SimulacrumResult
 
         public async Task<bool> CrearAsync(SimulacrumResultEntity simulacro)
         {
+            Console.WriteLine("Hola mundo r");
+            
             await _collection.InsertOneAsync(simulacro);
             return true;
         }

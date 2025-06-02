@@ -53,10 +53,9 @@ namespace WebAPI.Controller
             {
                 return Conflict(new { success = false, message = ex.Message });
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
-
             }
         }
 

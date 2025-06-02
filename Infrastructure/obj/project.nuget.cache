@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "/5HgWK+V5hpF+YesuSFQxwxtesTeXbvBbRRYXimIYwI4smI/SWn/8hdaatJlv6iLRboiPlBtJAVUETNvgPcOmQ==",
+  "dgSpecHash": "IqSRygWe18FG7XnOr0A/kmnXIPBML934wo/RlZVJEhfAv0zFBEozOsE6zrKmDPMJL5kGF/HaKMGbqr+5rQwgSg==",
   "success": true,
   "projectFilePath": "/home/afyaruro/UpcPro Backend/Infrastructure/Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -67,8 +67,7 @@
     "/home/afyaruro/.nuget/packages/system.security.cryptography.xml/8.0.2/system.security.cryptography.xml.8.0.2.nupkg.sha512",
     "/home/afyaruro/.nuget/packages/system.security.principal.windows/5.0.0/system.security.principal.windows.5.0.0.nupkg.sha512",
     "/home/afyaruro/.nuget/packages/system.text.encodings.web/8.0.0/system.text.encodings.web.8.0.0.nupkg.sha512",
-    "/home/afyaruro/.nuget/packages/zstdsharp.port/0.7.3/zstdsharp.port.0.7.3.nupkg.sha512",
-    "/home/afyaruro/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.11/microsoft.aspnetcore.app.ref.8.0.11.nupkg.sha512"
+    "/home/afyaruro/.nuget/packages/zstdsharp.port/0.7.3/zstdsharp.port.0.7.3.nupkg.sha512"
   ],
   "logs": []
 }

@@ -18,6 +18,8 @@ namespace Application.Service.SimulacrumResult.Commands.SimulacrumResultCreate
         public async Task<bool> HandleAsync(SimulacrumResultCreateInputCommand command, string idUser, string typeResult)
         {
 
+            Console.WriteLine("Hola mundo");
+
             var validator = new SimulacrumResultCreateCommandValidator();
             var validationResult = await validator.ValidateAsync(command);
 
@@ -26,11 +28,19 @@ namespace Application.Service.SimulacrumResult.Commands.SimulacrumResultCreate
                 throw new ValidationException(validationResult.Errors);
             }
 
+            Console.WriteLine("Hola mundo1");
+
+
+
+
 
             if (await _simulacrumResultRepository.ExistByUser(idUser: idUser, idSimulacro: command.IdSimulacro))
             {
                 throw new EntityExistException("Ya existe un SimulacrumResult para este simulacro");
             }
+
+            Console.WriteLine("Hola mundo2");
+
 
             return await _simulacrumResultRepository.CrearAsync(new SimulacrumResultEntity(
                 type: typeResult,

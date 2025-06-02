@@ -28,11 +28,6 @@ namespace Application.Service.User.Commands.UserUpdate
                 throw new ValidationException(validationResult.Errors);
             }
 
-            if (command.Password == command.PasswordActual)
-            {
-                throw new EntityNotFoundException("La contraseña no es valida ya que tu contraseña nueva no puede ser igual a la actual");
-            }
-
             if (!IsValidObjectId.IsValid(userId))
             {
                 throw new EntityNotFoundException("El user Id no es valido");
@@ -46,10 +41,16 @@ namespace Application.Service.User.Commands.UserUpdate
             }
 
             var helper = new PasswordEncryptionHelper();
-            command.PasswordActual = helper.HashPassword(command.PasswordActual, existUser.Mail);
+            bool isValid = helper.VerifyPassword(existUser.Password, command.PasswordActual, existUser.Mail);
 
-            if (existUser.Password == command.PasswordActual)
+
+            if (isValid)
             {
+
+                if (command.Password == command.PasswordActual)
+                {
+                    throw new EntityNotFoundException("La contraseña no es valida ya que tu contraseña nueva no puede ser igual a la actual");
+                }
 
                 command.Password = helper.HashPassword(command.Password, existUser.Mail);
                 return await this._userRepository.UpdatePassword(userId, command.Password);
